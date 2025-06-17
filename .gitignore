@@ -1,0 +1,14 @@
+/nbproject/
+/runtime/*
+/public/uploads/*
+/public/h5/*
+.DS_Store
+.idea
+composer.lock
+*.log
+*.css.map
+!.gitkeep
+.env
+.svn
+.vscode
+.user.ini

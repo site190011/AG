@@ -1,0 +1,67 @@
+
+<div>
+    <?php if (!empty($promotion_user_config)) { ?>
+    <div class="form-horizontal nice-validator n-default n-bootstrap">
+        <div class="form-group" style="text-align: center; padding: 20px;">
+            <h2>用户配置的返水比例</h2>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">真人:</label>
+            <div class="col-xs-12 col-sm-8">
+                <?php echo (isset($promotion_user_config['rebate1']) ? $promotion_user_config['rebate1'] : 0)/1; ?>%
+            </div>
+        </div>
+
+        <div class="form-group"> 
+            <label class="control-label col-xs-12 col-sm-2">电子:</label>
+            <div class="col-xs-12 col-sm-8">
+                <?php echo (isset($promotion_user_config['rebate2']) ? $promotion_user_config['rebate2'] : 0)/1; ?>%
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">彩票:</label>
+            <div class="col-xs-12 col-sm-8">
+                <?php echo (isset($promotion_user_config['rebate3']) ? $promotion_user_config['rebate3'] : 0); ?>%
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">体育:</label>
+            <div class="col-xs-12 col-sm-8">
+                <?php echo (isset($promotion_user_config['rebate4']) ? $promotion_user_config['rebate4'] : 0); ?>%
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">电竞:</label>
+            <div class="col-xs-12 col-sm-8">
+                <?php echo (isset($promotion_user_config['rebate5']) ? $promotion_user_config['rebate5'] : 0); ?>%
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">捕鱼:</label>
+            <div class="col-xs-12 col-sm-8">
+                <?php echo (isset($promotion_user_config['rebate6']) ? $promotion_user_config['rebate6'] : 0); ?>%
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">棋牌:</label>
+            <div class="col-xs-12 col-sm-8">
+                <?php echo (isset($promotion_user_config['rebate7']) ? $promotion_user_config['rebate7'] : 0); ?>%
+            </div>
+        </div>
+    </div>
+    <?php } else { ?>
+        该用户没有配置
+    <?php } ?>
+</div>
+
+<style>
+    .form-horizontal .control-label{
+        padding-top: 0;
+    }
+</style>
