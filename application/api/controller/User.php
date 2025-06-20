@@ -80,10 +80,15 @@ class User extends Api
             'mobile' => $user->mobile,
             'email' => $user->email,
             'money' => $user->money,
+            'gender' => $user->gender,
             'joinDay' => ceil((time() - $user->jointime) / 86400),
             'has_pay_password' => $user->pay_password ? true : false,
             'agent_promotion' => $user->agent_promotion,
             'invitation_code' => $user->invitation_code,
+            'pid' => $user->pid,
+            'pid_path' => $user->pid_path,
+            'birthday' => $user->birthday,
+            'bio' => $user->bio,
         ];
 
         $this->success('', $user);

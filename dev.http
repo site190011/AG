@@ -75,3 +75,6 @@ Content-Type: application/json
     "value": "999",
     "signature": "xxx" // md5(order_id + user_id + value + token)
 }
+
+### 获取游戏平台列表
+GET {{host}}/api/games/getPlatTypeList

@@ -27,6 +27,7 @@ return array (
     'dictionary' => '字典配置',
     'transaction' => '交易配置',
     'promotion' => '合营配置',
+    'kefu' => '客服配置',
   ),
   'mail_type' => '1',
   'mail_smtp_host' => 'smtp.qq.com',
@@ -49,4 +50,5 @@ return array (
   'min_recharge' => '88',
   'max_recharge' => '88888',
   'recharge_switch' => 'on',
+  'kefu_url' => 'http://kefu.ag.cc',
 );

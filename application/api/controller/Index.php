@@ -240,4 +240,9 @@ class Index extends Api
         $this->success('请求成功', $gamePlatTypeList);
     }
 
+    public function get_kefu_list()
+    {
+         
+    }
+
 }
