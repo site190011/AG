@@ -1,12 +1,15 @@
 define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
 
+    const params = new URLSearchParams(location.search);
+    const typeValue = params.get('type');
+
     var Controller = {
         index: function () {
             // 初始化表格参数配置
             Table.api.init({
                 extend: {
                     index_url: 'article/index' + location.search,
-                    add_url: 'article/add',
+                    add_url: 'article/add?type=' + typeValue,
                     edit_url: 'article/edit',
                     del_url: 'article/del',
                     multi_url: 'article/multi',
@@ -22,6 +25,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 'events': '活动',
                 'news' : '新闻',
                 'manual' : '教程',
+                'poster' : '海报',
             };
             var statusSet = {
                 'draft': '未发布',
@@ -49,9 +53,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'createtime', title: __('Createtime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},
                         {field: 'updatetime', title: __('Updatetime'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},
                         {field: 'coverimage', title: __('Coverimage'), operate: false, events: Table.api.events.image, formatter: Table.api.formatter.image},
-                        {field: 'tags', title: __('Tags'), operate: 'LIKE', formatter: function (value, row, index) {
-                            return Table.api.formatter.flag.call(this, value, row, index);
-                        }},
+                        // {field: 'tags', title: __('Tags'), operate: 'LIKE', formatter: function (value, row, index) {
+                        //     return Table.api.formatter.flag.call(this, value, row, index);
+                        // }},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]

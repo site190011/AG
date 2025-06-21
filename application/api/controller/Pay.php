@@ -4,6 +4,7 @@ namespace app\api\controller;
 
 use app\common\controller\Api;
 use fast\Http;
+use think\Db;
 use think\Env;
 
 /**
@@ -63,7 +64,45 @@ class Pay extends Api
             return json(["code"=>1, "msg"=>"签名错误"]);
         }
 
-        //TODO
+        $exchange_rate = Db::name('bank')->where("bank_code", 'ustd_trc20')->value("exchange_rate");
+
+        if (!$exchange_rate) {
+            return json(["code"=>1, "msg"=>"汇率错误"]);
+        }
+
+        $cachekey = 'trc20Callback_' . $order_id;
+
+        if (cache($cachekey)) {
+            return json(["code"=>1, "msg"=>"订单已处理"]);
+        }
+
+        if ($user_id <= 0) {
+            return json(["code"=>1, "msg"=>"用户错误"]);
+        }
+
+        $rmbAmount = $amount * $exchange_rate;
+
+        $user = \app\common\model\User::get($user_id);
+
+        $user->changeMoney('balance', $rmbAmount, 'recharge', '充值', 'user_recharge', $order_id);
+
+        $runtimeDir = ROOT_PATH . 'runtime' . DS . 'log' . DS . 'pay';
+
+        if (!is_dir($runtimeDir)) {
+            mkdir($runtimeDir, 0755, true);
+        }
+
+        $logFile = $runtimeDir . DS . 'pay_' . date('Ymd') . '.log';
+        $logData = [
+            'user_id' => $user_id,
+            'amount' => $amount,
+            'exchange_rate' => $exchange_rate,
+            'order_id' => $order_id
+        ];
+
+        file_put_contents($logFile, date('Y-m-d H:i:s') . ' ' . json_encode($logData) . "\r\n", FILE_APPEND);
+
+        cache($cachekey, json_encode($logData), 86400 * 30);
 
         return json(["code"=>0, "msg"=>"success"]);
 

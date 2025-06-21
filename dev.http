@@ -78,3 +78,10 @@ Content-Type: application/json
 
 ### 获取游戏平台列表
 GET {{host}}/api/games/getPlatTypeList
+
+### 获取客服列表
+GET {{host}}/api/index/get_kefu_list
+Token: {{token}}
+
+### 获取支付渠道列表
+GET {{host}}/api/index/get_bank_list

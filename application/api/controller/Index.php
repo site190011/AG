@@ -3,6 +3,7 @@
 namespace app\api\controller;
 
 use app\admin\model\AgApi;
+use app\admin\model\Kefu;
 use app\common\controller\Api;
 use app\common\model\User;
 use think\App;
@@ -242,7 +243,24 @@ class Index extends Api
 
     public function get_kefu_list()
     {
-         
+         $platKefuList = Kefu::where('status', 1)->select();
+         $promotionKefuUrl = '';
+
+         $user = $this->auth->getUser();
+
+         if ($user){
+            $pid_path = array_values(array_filter(explode(',',$user->pid_path)));
+            if (count($pid_path) > 0){
+                $promotionKefuUrl = Db::name('promotion_user_config')->where('user_id',$pid_path[0])->value('kefuUrl');
+            }
+         }
+
+         Log::test('ttttttttttttttttttttttttttt');
+
+         $this->success('请求成功', [
+             'platKefuList' => $platKefuList,
+             'promotionKefuUrl' => $promotionKefuUrl
+         ]);
     }
 
 }

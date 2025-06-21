@@ -109,7 +109,7 @@ class Games extends Api
             $res = $agapi->getGameEntryUrl($playerId, $game, $return_url);
 
         } catch (\Throwable $e) {
-            $this->error('无法获入口地址', $e->getMessage());
+            $this->error('无法获入口地址', json_decode($e->getMessage(), true) ?: $e->getMessage());
         }
 
         if ($res && ($res['code'] == 10000)) {

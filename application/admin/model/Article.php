@@ -53,6 +53,7 @@ class Article extends Model
             'events' => '活动',
             'news' => '新闻',
             'manual' => '教程',
+            'poster' => '海报'
         ];
     }
 

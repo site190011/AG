@@ -39,6 +39,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'name', title: __('Name'), operate: 'LIKE'},
                         {field: 'short_name', title: __('Short_name'), operate: 'LIKE'},
                         {field: 'bank_code', title: __('Bank_code'), operate: 'LIKE'},
+                        {field: 'exchange_rate', title: '与人民币的汇率', operate: 'LIKE'},
                         {field: 'logo', title: __('Logo'), operate: 'LIKE', table: table, class: 'table-img', formatter: Table.api.formatter.image},
                         {field: 'sort', title: __('Sort')},
                         {field: 'status', title: __('Status'), formatter: Table.api.formatter.toggle, events: Table.api.events.toggle},

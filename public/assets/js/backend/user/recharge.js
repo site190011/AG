@@ -50,7 +50,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Table.api.bindevent(table);
         },
         add: function () {
-            Controller.api.bindevent();
+            // Controller.api.bindevent();
+            Form.api.bindevent($("form[role=form]"), function (data) {
+                if (data) {
+                    parent.Backend.api.open('user/recharge/edit/ids/' + data, '确认充值');
+                }
+            });
         },
         edit: function () {
             Controller.api.bindevent();

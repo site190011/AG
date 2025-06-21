@@ -21,6 +21,8 @@ class Ag extends Command
     ];
     protected function configure()
     {
+
+        // php ./think Ag --type=syncGamesToDB
         $this
             ->setName('Ag')
             ->addOption('type', 't', Option::VALUE_OPTIONAL, '执行方法:' . implode('|', array_keys($this->typeList)), '')

@@ -8,7 +8,7 @@ use think\Log;
 // 商户后台👇
 // https://login.api-bet.com/
 // qwe9911
-// XIAObai@547090
+// Aa123456.
 // SN:f65
 // KEY:ar8h1S1kd0r0U843T1h7125j9XS28i51
 // 👍NG官方频道（维护通知）：https://t.me/NewGaming
@@ -157,9 +157,11 @@ class AgApi
 
         if ($list) {
             cache('games_' . $platType, $list, 86400);
+        } else {
+            return [];
         }
 
-        return $list['data'];
+        return $list['data'] ?: [];
     }
 
     /**
@@ -209,14 +211,26 @@ class AgApi
         $platTypeList = $this->getPlatTypeList();
         $i = 1;
         foreach ($platTypeList as $platType => $platTypeName) {
-            echo $i++ . "\n";
+            // echo $i++ . "\n";
             $Games = $this->getGames($platType);
+            $count = count($Games);
+
+            echo "加载 {$platType}:{$platTypeName} / count: {$count} \n";
 
             if (!$Games) {
                 continue;
             }
 
+            $gameTypes = [];
+
             foreach ($Games as $game) {
+
+                if (!isset($gameTypes[$game['gameType']])){
+                    $gameTypes[$game['gameType']] = 0;
+                }
+
+                $gameTypes[$game['gameType']]++;
+
                 $gameModel = new \app\admin\model\Games();
                 if ($gameModel->where('plat_type', $game['platType'])->where('game_code', $game['gameCode'])->find()) {
                     continue;
@@ -231,28 +245,40 @@ class AgApi
                     'game_name' => $gameName,
                     'is_enable' => 0
                 ]);
+
+                echo "{$platType}:{$gameName} 添加成功\n";
             }
+
+            echo 'gameType数量统计：' . json_encode($gameTypes) . "\n";
         }
     }
 
     public function getGameEntryUrl($playerId, $game, $return_url)
     {
 
-        $res = $this->sendRequest('/api/server/gameUrl', [
+        $args = [
             'playerId' => $playerId,
             'platType' => $game['plat_type'],
-            'currency' => self::CURRENCY,
             'gameType' => $game['game_type'],
+            'currency' => self::CURRENCY,
             'lang' => 'zh',
-            'gameCode' => $game['game_code'],
             'returnUrl' => $return_url,
             'ingress' => $game['ingress'],
-        ]);
+        ];
+
+        $game_code = $game['game_code'];
+
+        if ($game_code) {
+            $args['gameCode'] = $game_code;
+        }
+
+        $res = $this->sendRequest('/api/server/gameUrl', $args);
 
         if ($res['code'] != 10000) {
             throw new \Exception(json_encode([
                 'msg' => '获取游戏入口地址失败',
                 'res' => $res,
+                'args' => $args,
             ]));
         }
 
@@ -261,7 +287,7 @@ class AgApi
 
     public function generatePlayerId($user)
     {
-        $playerId = 'p' . str_pad($user['id'], 5, "0", STR_PAD_LEFT);
+        $playerId = 'p' . str_pad($user['id'], 6, "0", STR_PAD_LEFT);
 
         return $playerId;
     }

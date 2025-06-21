@@ -211,7 +211,7 @@ class User extends Model
 
         // $money = bcadd(bcadd($wallet['balance'], $wallet['freeze'], 2), bcadd($wallet['rebate'], $amount, 2), 2);
 
-        $this->update([
+        $this->where('id', $user_id)->update([
             'money' => Db::raw('money+' . $amount)
         ]);
 
