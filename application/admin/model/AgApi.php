@@ -134,7 +134,7 @@ class AgApi
         $response = curl_exec($ch);
         $error = curl_error($ch);
         curl_close($ch);
-
+        //dd($response);
         Log::api("请求URL: " . $url . "\n请求头: " . implode("\n", $headers) . "\n请求体: " . json_encode($data) . "\n响应: " . $response);
 
         if ($error) {
@@ -225,7 +225,7 @@ class AgApi
 
             foreach ($Games as $game) {
 
-                if (!isset($gameTypes[$game['gameType']])){
+                if (!isset($gameTypes[$game['gameType']])) {
                     $gameTypes[$game['gameType']] = 0;
                 }
 
@@ -236,7 +236,7 @@ class AgApi
                     continue;
                 }
 
-                $gameName = $game['gameName']['zh-hans'] ?? $game['gameName']['en'] ?? '-';
+                $gameName = $game['gameName']['zh-hans'] ?? $game['gameName']['en'] ?? current($game['gameName']) ?? '-';
                 $gameModel->save([
                     'plat_type' => $platType,
                     'game_type' => $game['gameType'],
@@ -256,20 +256,24 @@ class AgApi
     public function getGameEntryUrl($playerId, $game, $return_url)
     {
 
+        $lang = $this->getLang($game['plat_type']);
         $args = [
             'playerId' => $playerId,
             'platType' => $game['plat_type'],
             'gameType' => $game['game_type'],
             'currency' => self::CURRENCY,
-            'lang' => 'zh',
             'returnUrl' => $return_url,
-            'ingress' => $game['ingress'],
+            'ingress' => $game['ingress'] == 3 ? 1 : $game['ingress'],
         ];
 
         $game_code = $game['game_code'];
 
         if ($game_code) {
             $args['gameCode'] = $game_code;
+        }
+
+        if ($lang) {
+            $args['lang'] = $lang;
         }
 
         $res = $this->sendRequest('/api/server/gameUrl', $args);
@@ -282,12 +286,14 @@ class AgApi
             ]));
         }
 
+        $res['args'] = $args;
+
         return $res;
     }
 
     public function generatePlayerId($user)
     {
-        $playerId = 'p' . str_pad($user['id'], 6, "0", STR_PAD_LEFT);
+        $playerId = 'p' . str_pad($user['id'], 5, "0", STR_PAD_LEFT);
 
         return $playerId;
     }
@@ -308,7 +314,7 @@ class AgApi
 
         $res = $this->sendRequest('/api/server/create', $sendData);
 
-        if ($res['code'] != 10000) {
+        if ($res['code'] != 10000 && $res['code'] != 10002) {
             throw new \Exception(json_encode([
                 'msg' => '注册玩家账号失败',
                 'sendData' => $sendData,
@@ -368,5 +374,85 @@ class AgApi
         }
 
         return $res;
+    }
+
+    public function getLang($plat_type = null)
+    {
+        $langs = [
+            "ag" => "1",
+            "allbet" => "zh_CN",
+            "ap" => "",
+            "bbin" => "zh-cn",
+            "bg" => "zh_CN",
+            "boya" => "",
+            "cmd" => "zh-CN",
+            "cq9" => "China",
+            "cr" => "zh-cn",
+            "crown" => "ch",
+            "db1" => "1",
+            "db2" => "CN",
+            "db3" => "1",
+            "db5" => "cn",
+            "db6" => "CN",
+            "db7" => "",
+            "dg" => "cn",
+            "esb" => "ZH-CN",
+            "evo" => "zh",
+            "fb" => "CMN",
+            "fc" => "2",
+            "fg" => "zh-cn",
+            "ftg" => "zh",
+            "gb" => "cn",
+            "gw" => "cn",
+            "hb" => "zh-CN",
+            "ig" => "CN",
+            "im" => "ZH-CN",
+            "jdb" => "cn",
+            "jili" => "zh-CN",
+            "joker" => "zh",
+            "ka" => "zh",
+            "km" => "zh-CN",
+            "ky" => "zh-CN",
+            "leg" => "ly_lang=zh_cn",
+            "lgd" => "zh_CN",
+            "mg" => "ZH-CN",
+            "mt" => "ZH-CN",
+            "mw" => "cn",
+            "newbb" => "zh-cn",
+            "nw" => "",
+            "og" => "zh",
+            "panda" => "zh",
+            "pg" => "zh",
+            "png" => "zh_hans",
+            "pp" => "zh",
+            "ps" => "zh-CN",
+            "pt" => "ZH-CN",
+            "r88" => "zh-CN",
+            "saba" => "ch",
+            "sbo" => "zh-cn",
+            "sexy" => "cn",
+            "sg" => "",
+            "sgwin" => "",
+            "ss" => "2",
+            "t1" => "zh-CN",
+            "tcg" => "CN",
+            "tf" => "zh",
+            "v8" => "en_us",
+            "vg" => "1",
+            "vr" => "",
+            "we" => "zh_cn",
+            "wl" => "",
+            "wm" => "0",
+            "ww" => "zh-CN",
+            "xgd" => "zh",
+            "xj" => "",
+            "yoo" => "zh-CN"
+        ];
+
+        if ($plat_type){
+            return $langs[$plat_type] ?? null;
+        }
+
+        return $langs;
     }
 }

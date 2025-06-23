@@ -22,7 +22,7 @@ class Ag extends Command
     protected function configure()
     {
 
-        // php ./think Ag --type=syncGamesToDB
+        //sudo -u www php ./think Ag --type=syncGamesToDB
         $this
             ->setName('Ag')
             ->addOption('type', 't', Option::VALUE_OPTIONAL, '执行方法:' . implode('|', array_keys($this->typeList)), '')
@@ -56,7 +56,7 @@ class Ag extends Command
                 (new \app\admin\model\Games())->syncRealTimeRecord($pageNo, $pageSize);
             break;
             case 'syncHistoryRecord':
-                //php ./think Ag --type=syncHistoryRecord --startTime="2025-04-28 22:00:00" --endTime="2025-04-29 02:00:00"
+                //sudo -u www php ./think Ag --type=syncHistoryRecord --startTime="2025-04-28 22:00:00" --endTime="2025-04-29 02:00:00"
                 $startTime = $input->getOption('startTime');
                 $endTime = $input->getOption('endTime');
                 $pageNo = $input->getOption('pageNo');
@@ -64,11 +64,11 @@ class Ag extends Command
                 (new \app\admin\model\Games())->syncHistoryRecord($startTime, $endTime, $pageNo, $pageSize);
             break;
             case 'handleRebate':
-                //php ./think Ag --type=handleRebate
+                //sudo -u www php ./think Ag --type=handleRebate
                 (new \app\admin\model\Games())->handleRebate();
             break;
             case 'handleBonus':
-                //php ./think Ag --type=handleBonus
+                //sudo -u www php ./think Ag --type=handleBonus
                 $output->info('-每月红包');
                 (new \app\admin\model\vip\Info())->handleBonus('monthlyRedPacket', Date('Y-m'), '每月红包');
                 // $output->info('-每周红包');

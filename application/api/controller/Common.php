@@ -132,8 +132,22 @@ class Common extends Api
             $attachment = null;
             //默认普通上传文件
             $file = $this->request->file('file');
+            $channel = $this->request->post("channel");
+            //TODO 根据频道存储文件到不同的目录
             try {
-                $upload = new Upload($file);
+
+                $config = [];
+
+                switch ($channel){
+                    case 'avatar':
+                        $config = [
+                            'size' => 5 * 1024 * 1024,
+                            'ext' => 'jpg,png,gif,jpeg'
+                        ];
+                        break;
+                }
+
+                $upload = new Upload($file, $config);
                 $attachment = $upload->upload();
             } catch (UploadException $e) {
                 $this->error($e->getMessage());

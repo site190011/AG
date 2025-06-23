@@ -62,18 +62,16 @@ POST {{host}}/api/pay/getTrc20Address
 Content-Type: application/json
 Token: {{token}}
 
-{
-}
 
 ### trc20充值回调
 POST {{host}}/api/pay/trc20Callback
 Content-Type: application/json
 
 {
-    "order_id": "xxx",
-    "user_id": "11",
-    "value": "999",
-    "signature": "xxx" // md5(order_id + user_id + value + token)
+    "order_id": "xxx1",
+    "user_id": "2",
+    "value": "9",
+    "signature": "1b6eb958ed744194afcec4e5219fb61c"
 }
 
 ### 获取游戏平台列表
@@ -85,3 +83,28 @@ Token: {{token}}
 
 ### 获取支付渠道列表
 GET {{host}}/api/index/get_bank_list
+
+
+### 用户提交充值
+POST {{host}}/api/user/recharge
+Content-Type: application/json
+Token: {{token}}
+
+{
+    "amount": "999.00",//充值金额
+    "bank_id": "11",//充值渠道
+    "transaction_image": "/path/xxx.jpg",//凭证图片地址
+}
+
+
+### 用户实名
+POST {{host}}/api/user/realname
+Content-Type: application/json
+Token: {{token}}
+
+{
+    "real_name": "张三",//真实姓名
+    "id_card_number": "",// 身份证号码
+    "id_card_image1": "",// 身份证正面图片路径
+    "id_card_image2": ""// 身份证反面图片路径
+}

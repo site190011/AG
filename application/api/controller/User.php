@@ -354,7 +354,7 @@ class User extends Api
         }
     }
 
-    public function realme()
+    public function realname()
     {
         $user = $this->auth->getUser();
         $user_id = $user->id;
@@ -363,8 +363,8 @@ class User extends Api
         $id_card_image1 = $this->request->post('id_card_image1');
         $id_card_image2 = $this->request->post('id_card_image2');
         $remark = $this->request->post('remark');
-
-        $exist = Db::name('user_realme')->where('user_id', $user_id)->find();
+dd($real_name);
+        $exist = Db::name('user_realname')->where('user_id', $user_id)->find();
 
         if ($exist) {
             if($remark['status'] == 0) {
@@ -373,7 +373,7 @@ class User extends Api
                 $this->error('已审核通过');
             }
 
-            Db::name('user_realme')->where('user_id', $user_id)->update([
+            Db::name('user_realname')->where('user_id', $user_id)->update([
                 'real_name' => $real_name,
                 'id_card_number' => $id_card_number,
                 'id_card_image1' => $id_card_image1,
@@ -383,7 +383,7 @@ class User extends Api
                 'update_time' => Date('Y-m-d H:i:s')
             ]);
         } else {
-            Db::name('user_realme')->insert([
+            Db::name('user_realname')->insert([
                 'real_name' => $real_name,
                 'id_card_number' => $id_card_number,
                 'id_card_image1' => $id_card_image1,
@@ -788,7 +788,6 @@ class User extends Api
         $user = $this->auth->getUser();
         $user_id = $user->id;
         $amount = $this->request->post('amount');
-        $bank_id = $this->request->post('bank_id');
         $bank_id = $this->request->post('bank_id');
         $transaction_image = $this->request->post('transaction_image');
 

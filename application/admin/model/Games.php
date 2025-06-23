@@ -154,6 +154,36 @@ class Games extends Model
                 $this->syncRecord($recordType, $pageNo + 1, $pageSize, $startTime, $endTime);
             }
         }
+
+        $this->updateUserMoneyByBetRecords();
+    }
+
+    public function updateUserMoneyByBetRecords ()
+    {
+        // 找出未返利的订单,按userId分组,先查出数据,再批量更新
+        $list = Db::name('game_bet')
+            ->where('is_update_user_money', 0)
+            ->where('status', 1)
+            ->field('user_id, game_type, group_concat(id) as ids, sum(settled_amount) as settled_amount')
+            ->group('user_id, game_type')
+            ->select();
+
+        Db::startTrans();
+        foreach ($list as $item) {
+            $user_id = $item['user_id'];
+            $user = User::lock(true)->find($user_id);
+
+            if (!$user) {
+                Db::name('game_bet')->where('id', 'in', $item['ids'])->update(['is_update_user_money' => -1]);
+                continue;
+            }
+
+            $user->changeMoney('game_pay', $item['settled_amount'], 'game_pay', '玩游戏', 'game_pay', $item['ids'], false);
+
+            //更新下注记录为已更新用户信息
+            Db::name('game_bet')->where('id', 'in', $item['ids'])->update(['is_update_user_money' => 1]);
+        }
+        Db::commit();
     }
 
     public function handleRebate()
@@ -161,23 +191,23 @@ class Games extends Model
 
         $systemConfig = (array)Db::name('promotion_user_config')->where('user_id', 0)->find();
 
-        $betBuid = Db::name('game_bet');
-        // 未更新用户余额的订单,按userId分组,先查出数据,再批量更新
-        $list = $betBuid
+        // 找出未返利的订单,按userId分组,先查出数据,再批量更新
+        $list = Db::name('game_bet')
             ->where('is_rebate', 0)
             ->where('status', 1)
             ->field('user_id, game_type, group_concat(id) as ids, sum(valid_amount) as valid_amount')
             ->group('user_id, game_type')
             ->select();
 
+        Db::startTrans();
+
         foreach ($list as $item) {
-            Db::startTrans();
             $user_id = $item['user_id'];
 
             $user = User::lock(true)->find($user_id);
 
             if (!$user) {
-                $betBuid->where('id', 'in', $item['ids'])->update(['is_rebate' => -1]);
+                Db::name('game_bet')->where('id', 'in', $item['ids'])->update(['is_rebate' => -1]);
                 continue;
             }
 
@@ -191,13 +221,13 @@ class Games extends Model
 
             if ($rebateRatioTotal <= 0) {
                 // 没有返水比例
-                $betBuid->where('id', 'in', $item['ids'])->update(['is_rebate' => 2]);
+                Db::name('game_bet')->where('id', 'in', $item['ids'])->update(['is_rebate' => 2]);
                 continue;
             }
 
             if ($rebateAmountTotal <= 0) {
                 // 没有返水金额
-                $betBuid->where('id', 'in', $item['ids'])->update(['is_rebate' => 3]);
+                Db::name('game_bet')->where('id', 'in', $item['ids'])->update(['is_rebate' => 3]);
                 continue;
             }
 
@@ -250,14 +280,14 @@ class Games extends Model
                     'player_uid' => $user_id,
                     'related_bet_ids' => $item['ids'],
                     'bet_amount' => $item['valid_amount'],
-                    'rebate_amount' => $rebateAmount,
+                    'rebate_amount' => $subRebateAmountSurplus,
                     'create_time' => Date('Y-m-d H:i:s')
                 ]);
             }
 
             //更新下注记录为已返水
-            $betBuid->where('id', 'in', $item['ids'])->update(['is_rebate' => 1]);
-            Db::commit();
+            Db::name('game_bet')->where('id', 'in', $item['ids'])->update(['is_rebate' => 1]);
         }
+        Db::commit();
     }
 }

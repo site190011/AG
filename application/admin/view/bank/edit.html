@@ -53,6 +53,21 @@
     </div>
 
     <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">二维码:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-qr_image" data-rule="required" class="form-control" size="50" name="row[qr_image]" type="text" value="{$row.qr_image|htmlentities}">
+                <div class="input-group-addon no-border no-padding">
+                    <span><button type="button" id="faupload-qr_image" class="btn btn-danger faupload" data-input-id="c-qr_image" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp,image/webp" data-multiple="false" data-preview-id="p-qr_image"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                    <span><button type="button" id="fachoose-qr_image" class="btn btn-primary fachoose" data-input-id="c-qr_image" data-mimetype="image/*" data-multiple="false"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
+                </div>
+                <span class="msg-box n-right" for="c-qr_image"></span>
+            </div>
+            <ul class="row list-inline faupload-preview" id="p-qr_image"></ul>
+        </div>
+    </div>
+
+    <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Sort')}:</label>
         <div class="col-xs-12 col-sm-8">
             <input id="c-sort" min="0" class="form-control" name="row[sort]" type="number" value="{$row.sort|htmlentities}">
@@ -89,17 +104,12 @@
         </div>
     </div>
     <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Create_time')}:</label>
+        <label class="control-label col-xs-12 col-sm-2">其他配置:</label>
         <div class="col-xs-12 col-sm-8">
-            <input id="c-create_time" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[create_time]" type="text" value="{:$row.create_time?datetime($row.create_time):''}">
+            <textarea id="c-config" class="form-control " rows="5" name="row[config]" cols="50">{$row.config|htmlentities}</textarea>
         </div>
     </div>
-    <div class="form-group">
-        <label class="control-label col-xs-12 col-sm-2">{:__('Update_time')}:</label>
-        <div class="col-xs-12 col-sm-8">
-            <input id="c-update_time" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[update_time]" type="text" value="{:$row.update_time?datetime($row.update_time):''}">
-        </div>
-    </div>
+
     <div class="form-group layer-footer">
         <label class="control-label col-xs-12 col-sm-2"></label>
         <div class="col-xs-12 col-sm-8">

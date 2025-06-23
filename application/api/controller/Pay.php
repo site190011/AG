@@ -30,7 +30,7 @@ class Pay extends Api
             $this->error('请先登录');
         }
 
-        $res = Http::get($trc20_api . "/", [
+        $res = Http::get($trc20_api . "/api/v1/address", [
             'currency' => 'usdt',
             'network' => 'trc20',
             'user_id' => $user_id
@@ -40,7 +40,9 @@ class Pay extends Api
             ]
         ]);
 
-        if ($res['code'] == 200) {
+        $res = json_decode($res, true);
+
+        if ($res['code'] == 0) {
             $this->success('成功', $res['data']);
         } else {
             $this->error($res['message']);
@@ -85,19 +87,31 @@ class Pay extends Api
         $user = \app\common\model\User::get($user_id);
 
         $user->changeMoney('balance', $rmbAmount, 'recharge', '充值', 'user_recharge', $order_id);
+        Db::name('user_recharge')->insert([
+            'user_id' => $user_id,
+            'amount' => $rmbAmount,
+            'status' => 1,
+            'success_time' => time(),
+            'create_time' => time(),
+            'update_time' => time(),
+            'bank_id' => '13',
+            'currency' => 'cny',
+            'remark' => '接口回调',
+        ]);
 
-        $runtimeDir = ROOT_PATH . 'runtime' . DS . 'log' . DS . 'pay';
+        $logDir = ROOT_PATH . 'runtime' . DS . 'log' . DS . 'pay';
 
-        if (!is_dir($runtimeDir)) {
-            mkdir($runtimeDir, 0755, true);
+        if (!is_dir($logDir)) {
+            mkdir($logDir, 0755, true);
         }
 
-        $logFile = $runtimeDir . DS . 'pay_' . date('Ymd') . '.log';
+        $logFile = $logDir . DS . 'pay_' . date('Ymd') . '.log';
         $logData = [
             'user_id' => $user_id,
             'amount' => $amount,
             'exchange_rate' => $exchange_rate,
-            'order_id' => $order_id
+            'order_id' => $order_id,
+            'rmbAmount' => $rmbAmount
         ];
 
         file_put_contents($logFile, date('Y-m-d H:i:s') . ' ' . json_encode($logData) . "\r\n", FILE_APPEND);

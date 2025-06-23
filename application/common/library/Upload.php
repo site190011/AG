@@ -29,9 +29,9 @@ class Upload
     protected $file = null;
     protected $fileInfo = null;
 
-    public function __construct($file = null)
+    public function __construct($file = null, $config = [])
     {
-        $this->config = Config::get('upload');
+        $this->config = count($config) ? $config : Config::get('upload');
         $this->chunkDir = RUNTIME_PATH . 'chunks';
         if ($file) {
             $this->setFile($file);
