@@ -37,8 +37,6 @@ class Recharge extends Backend
      */
 
 
-    //edit/ids/4
-
     public function add()
     {
         if (false === $this->request->isPost()) {
@@ -106,6 +104,9 @@ class Recharge extends Backend
             $user = \app\common\model\User::get($user_id);
 
             $user->changeMoney('balance', $row['amount'], 'recharge', '充值', 'user_recharge', $row->id, false);
+            
+            $user->tryVipUpgrade(false);
+
         } else if ($params['audit'] == 'refuse') {
             $data['status'] = 2;
         }

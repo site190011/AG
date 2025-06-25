@@ -91,9 +91,20 @@ Content-Type: application/json
 Token: {{token}}
 
 {
-    "amount": "999.00",//充值金额
-    "bank_id": "11",//充值渠道
-    "transaction_image": "/path/xxx.jpg",//凭证图片地址
+    "amount": "9999.00",
+    "bank_id": "11",
+    "transaction_image": "/path/xxx.jpg"
+}
+
+
+### 用户提交提现
+POST {{host}}/api/user/withdraw
+Content-Type: application/json
+Token: {{token}}
+
+{
+    "amount": "9.00",
+    "bank_id": "11"
 }
 
 
@@ -103,8 +114,16 @@ Content-Type: application/json
 Token: {{token}}
 
 {
-    "real_name": "张三",//真实姓名
-    "id_card_number": "",// 身份证号码
-    "id_card_image1": "",// 身份证正面图片路径
-    "id_card_image2": ""// 身份证反面图片路径
+    "real_name": "张三",
+    "id_card_number": "22",
+    "id_card_image1": "",
+    "id_card_image2": "2"
 }
+
+### 交易记录
+GET {{host}}/api/user/monery_log?type=withdraw&timeRange=today
+Token: 232b735b-b2bb-42dd-a2c8-cc4cd66832bc
+
+### 获取用户充值总额
+GET {{host}}/api/user/get_recharge_sum
+Token: {{token}}

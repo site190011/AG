@@ -455,27 +455,25 @@ class Promotion extends Api
         $user = $this->auth->getUser();
         $sub_user_ids = Db::table('fa_user')->where('pid_path', 'like', '%,' . $user->id . ',%')->column('id');
         $list = Db::table('fa_user_withdraw')
-            ->whereIn('uid', $sub_user_ids)
+            ->whereIn('user_id', $sub_user_ids)
             ->paginate(20);
 
         $this->success('', $list);
     }
 
     /**
-     * 结算返水
+     * 结算返水记录
      * @ApiMethod (POST)
      */
     public function subRebateSettlement()
     {
-        Db::startTrans();
-        try {
-            // 结算逻辑
-            Db::commit();
-            $this->success('结算完成');
-        } catch (\Throwable $e) {
-            Db::rollback();
-            $this->error('结算失败: ' . $e->getMessage());
-        }
+        $user = $this->auth->getUser();
+        $sub_user_ids = Db::table('fa_user')->where('pid_path', 'like', '%,' . $user->id . ',%')->column('id');
+        $list = Db::table('fa_promotion_rebate_log')
+            ->whereIn('user_id', $sub_user_ids)
+            ->paginate(20);
+
+        $this->success('', $list);
     }
 
     /**
@@ -484,9 +482,13 @@ class Promotion extends Api
      */
     public function onlineUser()
     {
+        $user = $this->auth->getUser();
+        $sub_user_ids = Db::table('fa_user')->where('pid_path', 'like', '%,' . $user->id . ',%')->column('id');
+
         try {
-            $onlineUsers = Db::table('fa_user_session')
-                ->where('expiretime', '>', time())
+            $onlineUsers = Db::table('fa_user')
+                ->where('id', 'in', $sub_user_ids)
+                ->where('online_time', '>', time() - 600)
                 ->count();
             $this->success('', ['totalCount' => $onlineUsers]);
         } catch (\Throwable $e) {
@@ -504,7 +506,6 @@ class Promotion extends Api
         $userInfo = Db::table('fa_user')->find($uid);
 
         $userInfo['subUserCount'] = Db::table('fa_user')->where('pid_path', 'like', '%,' . $uid . ',%')->count();
-        $userInfo['wallet'] = Db::table('fa_user_wallet')->where('user_id', $uid)->find();
 
         $this->success('', $userInfo);
     }

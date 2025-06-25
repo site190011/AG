@@ -228,6 +228,8 @@ class User extends Model
             'related_table_ids' => $related_table_ids
         ]);
 
+        $this->money = $this->money + $amount;
+
         if ($isStartTrans){
             Db::commit();
         }
@@ -273,5 +275,21 @@ class User extends Model
         Db::table('fa_user_wallet')->where('user_id', $user->id)->update([
             'has_money_in_game' => 0,
         ]);
+    }
+
+    /**
+     * 尝试会员升级
+     */
+    public function tryVipUpgrade($isStartTrans = true) {
+        $currentRechargeSum = Db::table('fa_user_recharge')->where('user_id', $this->id)->where('status', 1)->sum('amount');
+        $vipList = Db::table('fa_vip_config')->where('level', '>', $this->viplevel)->order('level', 'asc')->select();
+
+        foreach ($vipList as $vip) {
+            if ($currentRechargeSum >= $vip['upgradeConsumed']) {
+                $this->viplevel = $vip['level'];
+                $this->changeMoney('balance', $vip['upgradeBonus'], 'VipUpgrade', '会员升级', 'vip_config', $vip['id'], $isStartTrans);
+                $this->save();
+            }
+        }
     }
 }

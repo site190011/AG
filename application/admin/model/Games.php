@@ -156,6 +156,7 @@ class Games extends Model
         }
 
         $this->updateUserMoneyByBetRecords();
+        $this->handleRebate();
     }
 
     public function updateUserMoneyByBetRecords ()

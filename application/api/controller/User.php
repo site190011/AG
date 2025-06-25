@@ -68,6 +68,7 @@ class User extends Api
     public function getUserInfo()
     {
         $user = $this->auth->getUser();
+        $real_name_info = Db::name('user_realname')->where('user_id', $user->id)->find();
 
         // 返回部分数据
         $user = [
@@ -89,6 +90,7 @@ class User extends Api
             'pid_path' => $user->pid_path,
             'birthday' => $user->birthday,
             'bio' => $user->bio,
+            'real_name_info' => $real_name_info
         ];
 
         $this->success('', $user);
@@ -362,14 +364,17 @@ class User extends Api
         $id_card_number = $this->request->post('id_card_number');
         $id_card_image1 = $this->request->post('id_card_image1');
         $id_card_image2 = $this->request->post('id_card_image2');
-        $remark = $this->request->post('remark');
-dd($real_name);
+
+        if (!$real_name || !$id_card_number || !$id_card_image1 || !$id_card_image2) {
+            $this->error('请填写完整');
+        }
+
         $exist = Db::name('user_realname')->where('user_id', $user_id)->find();
 
         if ($exist) {
-            if($remark['status'] == 0) {
+            if($exist['status'] == 0) {
                 $this->error('已提交，等待审核');
-            } else if ($remark['status'] == 1) {
+            } else if ($exist['status'] == 1) {
                 $this->error('已审核通过');
             }
 
@@ -384,6 +389,7 @@ dd($real_name);
             ]);
         } else {
             Db::name('user_realname')->insert([
+                'user_id' => $user_id,
                 'real_name' => $real_name,
                 'id_card_number' => $id_card_number,
                 'id_card_image1' => $id_card_image1,
@@ -635,31 +641,31 @@ dd($real_name);
         //type类型的值
         // recharge: 存款
         // withdraw: 取款
-        // rebate: 返水
+        // game_rebate: 返水
         // birthday: 生日礼金
-        // promotion: 晋级礼金
+        // VipUpgrade: 晋级礼金
         // monthlyRedPacket: 每月红包
         // exclusive: 专属豪礼
         
 
         switch ($timeRange) {
             case 'today':
-                $where['create_time'] = ['between', [strtotime(date('Y-m-d')), time()]];
+                $where['create_time'] = ['between', [date('Y-m-d 00:00:00'), date('Y-m-d 23:59:59')]];
                 break;
             case 'yesterday':
-                $where['create_time'] = ['between', [strtotime(date('Y-m-d', strtotime("-1 day"))), strtotime(date('Y-m-d')) - 1]];
+                $where['create_time'] = ['between', [date('Y-m-d 00:00:00', strtotime("-1 day")), date('Y-m-d 23:59:59', strtotime("yesterday"))]];
                 break;
             case '7day':
-                $where['create_time'] = ['between', [strtotime(date('Y-m-d', strtotime("-7 day"))), time()]];
+                $where['create_time'] = ['between', [date('Y-m-d 00:00:00', strtotime("-7 day")), date('Y-m-d 23:59:59')]];
                 break;
             case 'week':
-                $where['create_time'] = ['between', [strtotime(date('Y-m-d', strtotime("-1 week"))), time()]];
+                $where['create_time'] = ['between', [date('Y-m-d 00:00:00', strtotime("-1 week")), date('Y-m-d 23:59:59')]];
                 break;
             case '30day':
-                $where['create_time'] = ['between', [strtotime(date('Y-m-d', strtotime("-30 day"))), time()]];
+                $where['create_time'] = ['between', [date('Y-m-d 00:00:00', strtotime("-30 day")), date('Y-m-d 23:59:59')]];
                 break;
             case 'month':
-                $where['create_time'] = ['between', [strtotime(date('Y-m-d', strtotime("-1 month"))), time()]];
+                $where['create_time'] = ['between', [date('Y-m-d 00:00:00', strtotime("-1 month")), date('Y-m-d 23:59:59')]];
                 break;
             case 'custom':
                 $where['create_time'] = ['between', [$startDate, $endDate]];
@@ -683,7 +689,7 @@ dd($real_name);
         $password = $this->request->post('password');
         $bank_id = $this->request->post('bank_id');
 
-        if (config('site.withdraw_switch') !== 'off') {
+        if (config('site.withdraw_switch') !== 'on') {
             $this->error('提现功能已关闭');
         }
 
@@ -709,7 +715,7 @@ dd($real_name);
             $this->error('提现金额不能大于余额');
         }
 
-        if ($amount < config('site.max_withdraw')) {
+        if ($amount > config('site.max_withdraw')) {
             $this->error('提现金额不能大于' . config('site.max_withdraw'));
         }
 
@@ -791,7 +797,7 @@ dd($real_name);
         $bank_id = $this->request->post('bank_id');
         $transaction_image = $this->request->post('transaction_image');
 
-        if (config('site.recharge_switch') !== 'off') {
+        if (config('site.recharge_switch') !== 'on') {
             $this->error('充值功能已关闭');
         }
 
@@ -821,12 +827,15 @@ dd($real_name);
         }
 
         Db::name('user_recharge')->insert([
+            'order_no' => uniqid(),
             'user_id' => $user_id,
             'amount' => $amount,
             'status' => 0,
             'success_time' => 0,
-            'create_time' => time(),
-            'update_time' => time(),
+            'create_time' => date('Y-m-d H:i:s'),
+            'update_time' => date('Y-m-d H:i:s'),
+            'audit_type' => 'manual',
+            'pay_method' => 'user_pay',
             'bank_id' => $bank_id,
             'currency' => 'cny',
             'transaction_image' => $transaction_image,
@@ -834,5 +843,20 @@ dd($real_name);
 
         $this->success('提交成功,等待确认结果');
 
+    }
+
+    public function get_recharge_list(){
+        $user = $this->auth->getUser();
+        $user_id = $user->id;
+        $list = Db::name('user_recharge')->where('user_id', $user_id)->order('id', 'desc')->paginate();
+        $this->success('获取成功', $list);
+    }
+
+    public function get_recharge_sum(){ 
+        $user = $this->auth->getUser();
+        $user_id = $user->id;
+        $sum = Db::name('user_recharge')->where('user_id', $user_id)->where('status', 1)->sum('amount');
+
+        $this->success('获取成功', $sum);
     }
 }
