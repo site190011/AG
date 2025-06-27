@@ -2,6 +2,8 @@
 @token = 500a2467-8119-49a8-bfda-1ce5992b4d43
 
 
+GET {{host}}/api/index/test
+
 ### 获取公共配置信息
 GET {{host}}/api/index/getConfig
 

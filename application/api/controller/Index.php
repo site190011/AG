@@ -5,6 +5,7 @@ namespace app\api\controller;
 use app\admin\model\AgApi;
 use app\admin\model\Kefu;
 use app\common\controller\Api;
+use app\common\library\RedisManager;
 use app\common\model\User;
 use think\App;
 use think\Db;
@@ -31,9 +32,31 @@ class Index extends Api
 
     public function test()
     {
-        $user = User::get(2);
+        $redis = RedisManager::getInstance()->getRedis();
+        $userId = time();
 
-        // $user->changeMoney('balance', 20000, 'test');
+        // 当前时间戳
+        $now = time();
+
+        // 定义在线用户集合的 key
+        $onlineUsersKey = 'online_users';
+
+        // 记录用户在线状态，score 使用时间戳，成员是用户ID
+        $redis->zAdd($onlineUsersKey, $now, $userId);
+
+        // 定义在线有效时间，比如300秒（5分钟）
+        $expireSeconds = 10;
+
+        // 移除过期用户（时间戳小于当前时间-5分钟的都移除）
+        $redis->zRemRangeByScore($onlineUsersKey, 0, $now - $expireSeconds);
+
+        // 获取当前在线用户数
+        $onlineCount = $redis->zCard($onlineUsersKey);
+
+
+        // 返回结果
+        $this->success('当前在线人数：' . $onlineCount);
+
     }
 
     public function getConfig()

@@ -114,6 +114,8 @@ class Auth
             //初始化成功的事件
             Hook::listen("user_init_successed", $this->_user);
 
+            $user->where('id', $user_id)->update(['online_time' => time()]);
+
             return true;
         } else {
             $this->setError('You are not logged in');
