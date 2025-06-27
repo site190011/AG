@@ -3,6 +3,7 @@
 namespace app\api\controller;
 
 use app\common\controller\Api;
+use think\Db;
 
 /**
  * 游戏接口
@@ -31,52 +32,9 @@ class Games extends Api
      */
     public function getPlatTypeList()
     {
-        $agapi = new \app\admin\model\AgApi();
+        $list = Db::name('game_plat')->select();
 
-        $list = $agapi->getPlatTypeList();
-
-        $list2 = [];
-
-        $listAppend = [
-            'tf' => '电竞牛',
-            'db5' => '多宝电竞',
-            'xj' => '小金',
-            'wl' => '瓦力',
-            'ug' => 'UG',
-            'ss' => '三昇',
-            'sbo' => 'SBO',
-            'saba' => '沙巴',
-            'panda' => '熊猫体育',
-            'newbb' => 'NewBB',
-            'im' => 'IM',
-            'fb' => 'FB',
-            'crown' => '皇冠crown',
-            'cmd' => 'CMD',
-            'ap' => '平博',
-            'ww' => '双赢',
-            'vr' => 'VR',
-            'tcg' => '天成',
-            'sgwin' => '双赢',
-            'ig' => 'IG',
-            'gw' => 'GW',
-            'db3' => '多宝彩票',
-            'esb' => '电竞牛',
-            'cr' => '皇冠体育',
-            'bbin' => 'BB彩票'
-        ];
-        
-
-        foreach (array_merge($list, $listAppend) as $key => $name) {
-            $list2[] = [
-                'key' => $key,
-                'name' => $name
-            ];
-        }
-
-        return json([
-            'list' => $list2,
-            'total' => count($list2)
-        ]);
+        $this->success('success', $list);
     }
 
     public function getGameEntryUrl()

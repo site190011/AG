@@ -32,30 +32,61 @@ class Index extends Api
 
     public function test()
     {
-        $redis = RedisManager::getInstance()->getRedis();
-        $userId = time();
+        $agapi = new \app\admin\model\AgApi();
 
-        // 当前时间戳
-        $now = time();
+        $list = $agapi->getPlatTypeList();
 
-        // 定义在线用户集合的 key
-        $onlineUsersKey = 'online_users';
+        foreach ($list as $key => $name) {
+            $res = Db::name('game_plat')->where('key', $key)->find();
 
-        // 记录用户在线状态，score 使用时间戳，成员是用户ID
-        $redis->zAdd($onlineUsersKey, $now, $userId);
+            if (!$res) {
+                Db::name('game_plat')->insert([
+                    'key' => $key,
+                    'name' => $name,
+                    'api_scope' => 'fetch_api_game_list'
+                ]);
+            }
+        }
 
-        // 定义在线有效时间，比如300秒（5分钟）
-        $expireSeconds = 10;
+        $list2 = [
+            'tf' => '电竞牛',
+            'db5' => '多宝电竞',
+            'xj' => '小金',
+            'wl' => '瓦力',
+            'ug' => 'UG',
+            'ss' => '三昇',
+            'sbo' => 'SBO',
+            'saba' => '沙巴',
+            'panda' => '熊猫体育',
+            'newbb' => 'NewBB',
+            'im' => 'IM',
+            'fb' => 'FB',
+            'crown' => '皇冠crown',
+            'cmd' => 'CMD',
+            'ap' => '平博',
+            'ww' => '双赢',
+            'vr' => 'VR',
+            'tcg' => '天成',
+            'sgwin' => '双赢',
+            'ig' => 'IG',
+            'gw' => 'GW',
+            'db3' => '多宝彩票',
+            'esb' => '电竞牛',
+            'cr' => '皇冠体育',
+            'bbin' => 'BB彩票'
+        ];
 
-        // 移除过期用户（时间戳小于当前时间-5分钟的都移除）
-        $redis->zRemRangeByScore($onlineUsersKey, 0, $now - $expireSeconds);
+        foreach ($list2 as $key => $name) {
+            $res = Db::name('game_plat')->where('key', $key)->find();
 
-        // 获取当前在线用户数
-        $onlineCount = $redis->zCard($onlineUsersKey);
-
-
-        // 返回结果
-        $this->success('当前在线人数：' . $onlineCount);
+            if (!$res) {
+                Db::name('game_plat')->insert([
+                    'key' => $key,
+                    'name' => $name,
+                    'api_scope' => 'none'
+                ]);
+            }
+        }
 
     }
 

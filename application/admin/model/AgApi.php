@@ -2,6 +2,7 @@
 
 namespace app\admin\model;
 
+use think\Db;
 use think\Log;
 
 // =================================================
@@ -209,10 +210,10 @@ class AgApi
      */
     public function syncGamesToDB()
     {
-        $platTypeList = $this->getPlatTypeList();
-        $i = 1;
-        foreach ($platTypeList as $platType => $platTypeName) {
-            // echo $i++ . "\n";
+        $list = Db::name('game_plat')->where('api_scope', 'fetch_api_game_list')->select();
+        foreach ($list as $item) {
+            $platType = $item['key'];
+            $platTypeName = $item['name'];
             $Games = $this->getGames($platType);
             $count = count($Games);
 
