@@ -79,6 +79,9 @@ Content-Type: application/json
 ### 获取游戏平台列表
 GET {{host}}/api/games/getPlatTypeList
 
+### 获取游戏列表
+GET {{host}}/api/games/getGameList
+
 ### 获取客服列表
 GET {{host}}/api/index/get_kefu_list
 Token: {{token}}

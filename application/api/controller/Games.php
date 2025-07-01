@@ -19,9 +19,10 @@ class Games extends Api
         $gameType = $this->request->request('gameType');
         $gameType2 = $this->request->request('gameType2');
         $isRecommend = $this->request->request('isRecommend');
+        $keyword = $this->request->request('keyword');
         $gameModel = new \app\admin\model\Games();
 
-        $list = $gameModel->getGameList($platType, $gameType, $gameType2, $isRecommend);
+        $list = $gameModel->getGameList($platType, $gameType, $gameType2, $isRecommend, $keyword);
 
         $this->success('success', $list);
     }

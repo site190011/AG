@@ -142,13 +142,20 @@ class Index extends Backend
     public function checkTodoCount(){
 
         $realname = Db::name('user_realname')->where('status', 0)->count();
+        $realnameLastId = Db::name('user_realname')->where('status', 0)->max('id');
         $withdraw = Db::name('user_withdraw')->where('status', 'processing')->count();
+        $withdrawLastId = Db::name('user_withdraw')->where('status', 'processing')->max('id');
         $recharge = Db::name('user_recharge')->where('status', 0)->count();
+        $rechargeLastId = Db::name('user_recharge')->where('status', 0)->max('id');
 
         return $this->success('success', '', [
             'realname' => $realname,
             'withdraw' => $withdraw,
             'recharge' => $recharge,
+            'total' => $realname + $withdraw + $recharge,
+            'rechargeLastId' => $rechargeLastId,
+            'withdrawLastId' => $withdrawLastId,
+            'realnameLastId' => $realnameLastId,
         ]);
     }
 

@@ -19,7 +19,7 @@ define('APP_PATH', __DIR__ . '/../application/');
 require __DIR__ . '/../thinkphp/base.php';
 
 // 绑定到admin模块
-\think\Route::bind('admin');
+\think\Route::bind('agent');
 
 // 关闭路由
 \think\App::route(false);

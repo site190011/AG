@@ -34,9 +34,27 @@
                         <i class="fa fa-pencil"></i> 代办事<span class="counts counts-total">0</span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="javascript:;"><i class="fa fa-pencil"></i> 实名验证 <span class="counts counts-realname">0</span> </a></li>
-                        <li><a href="javascript:;"><i class="fa fa-pencil"></i>充值<span class="counts counts-recharge">0</span></a></li>
-                        <li><a href="javascript:;"><i class="fa fa-pencil"></i> 提现<span class="counts counts-withdraw">0</span></a></li>
+                        <li>
+                            <a href="javascript:Fast.api.addtabs('user/realname/index', '实名验证');">
+                                <i class="fa fa-pencil"></i>
+                                实名验证
+                                <span class="counts counts-realname">0</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:Fast.api.addtabs('user/recharge/index', '充值');">
+                                <i class="fa fa-pencil"></i>
+                                充值
+                                <span class="counts counts-recharge">0</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:Fast.api.addtabs('user/withdraw/index', '提现');">
+                                <i class="fa fa-pencil"></i>
+                                提现
+                                <span class="counts counts-withdraw">0</span>
+                            </a>
+                        </li>
                     </ul>
                     <style>
                         .counts{
@@ -52,29 +70,72 @@
                         }
                     </style>
                     <script>
-                        var checkTodoCount = function(){
+                        if (!localStorage.getItem("rechargeLastId")){
+                            localStorage.setItem("rechargeLastId", 0);
+                        }
+
+                        if (!localStorage.getItem("withdrawLastId")){
+                            localStorage.setItem("withdrawLastId", 0);
+                        }
+
+                        if (!localStorage.getItem("realnameLastId")){
+                            localStorage.setItem("realnameLastId", 0);
+                        }
+
+                        const audios = {
+                            'recharge': new Audio('/assets/audio/recharge.mp3'),
+                            'realname': new Audio('/assets/audio/realname.mp3'),
+                            'withdraw': new Audio('/assets/audio/withdraw.mp3')
+                        };
+
+                        const playAudio = function(type){
+                            audios[type].play().then(() => {
+                                window.audioContextInitialized = true;
+                            });
+                        };
+
+
+                        const checkTodoCount = function(){
                             $.post('/sFgiZbnXAW.php/index/checkTodoCount', {}, function(res){
-                                if(res.data.code != 1){
+                                if(res.code != 1){
                                     return;
                                 }
 
-                                var data = res.data.data || {};
+                                var data = res.data || {};
 
-                                $("todoCounts.counts-total").html(data.total || 0);
-                                $("todoCounts.counts-realname").html(data.realname || 0);
-                                $("todoCounts.counts-withdraw").html(data.withdraw || 0);
-                                $("todoCounts.counts-recharge").html(data.recharge || 0);
+                                $(".todoCounts .counts-total").html(data.total || 0);
+                                $(".todoCounts .counts-realname").html(data.realname || 0);
+                                $(".todoCounts .counts-withdraw").html(data.withdraw || 0);
+                                $(".todoCounts .counts-recharge").html(data.recharge || 0);
 
+                                var rechargeLastId = data.rechargeLastId;
+                                var withdrawLastId = data.withdrawLastId;
+                                var realnameLastId = data.realnameLastId;
+
+                                if (localStorage.getItem('rechargeLastId') < rechargeLastId){
+                                    localStorage.setItem('rechargeLastId', rechargeLastId);
+                                    playAudio('recharge');
+                                }
+
+                                if (localStorage.getItem('withdrawLastId') < withdrawLastId){
+                                    localStorage.setItem('withdrawLastId', withdrawLastId);
+                                    playAudio('withdraw');
+                                }
+
+                                if (localStorage.getItem('realnameLastId') < realnameLastId){
+                                    localStorage.setItem('realnameLastId', realnameLastId);
+                                    playAudio('realname');
+                                }
                             })
                         }
 
-                        setInterval(function () {
+                        window.addEventListener('load', () => {
                             checkTodoCount();
-                        }, 10000);
+                            setInterval(function () {
+                                checkTodoCount();
+                            }, 10000);
+                        });
 
-                        window.onload = function () {
-                            checkTodoCount();
-                        };
                     </script>
                 </li>
 

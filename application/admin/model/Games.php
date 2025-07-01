@@ -32,11 +32,11 @@ class Games extends Model
 
 
 
-    public function getGameList($platType, $gameType, $gameType2, $isRecommend = null)
+    public function getGameList($platType, $gameType, $gameType2, $isRecommend = null, $keyword = null)
     {
         $build = $this->where('is_enable', 1);
 
-        if ($gameType !== 'all') {
+        if (($gameType !== 'all') && $gameType ) {
             $build->where('game_type', $gameType);
         }
 
@@ -48,11 +48,15 @@ class Games extends Model
             $build->where('plat_type', $platType);
         }
 
-        if ($isRecommend !== null) {
+        if ($isRecommend) {
             $build->where('is_recommend', $isRecommend);
         }
 
-        $list = $build->order('sort', 'desc')->select();
+        if ($keyword) {
+           $build->where('game_name', 'like', '%' . $keyword . '%');
+        }
+
+        $list = $build->order('sort', 'desc')->paginate(100);
 
         return $list;
     }
