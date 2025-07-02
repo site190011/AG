@@ -139,13 +139,13 @@ class Agent extends Controller
                 $this->error(__('Please login first'), url('index/login', ['url' => $url]));
             }
             // 判断是否需要验证权限
-            if (!$this->auth->match($this->noNeedRight)) {
-                // 判断控制器和方法是否有对应权限
-                if (!$this->auth->check($path)) {
-                    Hook::listen('agent_nopermission', $this);
-                    $this->error(__('You have no permission'), '');
-                }
-            }
+            // if (!$this->auth->match($this->noNeedRight)) {
+            //     // 判断控制器和方法是否有对应权限
+            //     if (!$this->auth->check($path)) {
+            //         Hook::listen('agent_nopermission', $this);
+            //         $this->error(__('You have no permission'), '');
+            //     }
+            // }
         }
 
         // 非选项卡时重定向

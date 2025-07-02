@@ -32,6 +32,11 @@ class Index extends Agent
      */
     public function index()
     {
+
+        if (isset($_GET['addtabs'])) {
+            return redirect('/agent.php/index/dashboard.html?addtabs=1');
+        }
+
         $cookieArr = ['adminskin' => "/^skin\-([a-z\-]+)\$/i", 'multiplenav' => "/^(0|1)\$/", 'multipletab' => "/^(0|1)\$/", 'show_submenu' => "/^(0|1)\$/"];
         foreach ($cookieArr as $key => $regex) {
             $cookieValue = $this->request->cookie($key);
@@ -40,11 +45,7 @@ class Index extends Agent
             }
         }
         //左侧菜单
-        list($menulist, $navlist, $fixedmenu, $referermenu) = $this->auth->getSidebar([
-            'dashboard' => 'hot',
-            'addon'     => ['new', 'red', 'badge'],
-            'auth/rule' => __('Menu'),
-        ], $this->view->site['fixedpage']);
+        list($menulist, $navlist, $fixedmenu, $referermenu) = $this->auth->getSidebar([ ], $this->view->site['fixedpage']);
         $action = $this->request->request('action');
         if ($this->request->isPost()) {
             if ($action == 'refreshmenu') {
@@ -58,6 +59,12 @@ class Index extends Agent
         $this->view->assign('referermenu', $referermenu);
         $this->view->assign('title', __('Home'));
         return $this->view->fetch();
+    }
+
+    public function dashboard()
+    {
+        dd("ppkk");
+ 
     }
 
     /**

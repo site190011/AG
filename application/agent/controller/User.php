@@ -31,6 +31,6 @@ class User extends Agent
      */
     public function index()
     {
-
+        die("user");
     }
 }
