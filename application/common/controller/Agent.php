@@ -60,6 +60,19 @@ class Agent extends Controller
     protected $relationSearch = false;
 
     /**
+     * 是否开启数据限制
+     * 支持auth/personal
+     * 表示按权限判断/仅限个人
+     * 默认为禁用,若启用请务必保证表中存在admin_id字段
+     */
+    protected $dataLimit = false;
+
+    /**
+     * 数据限制字段
+     */
+    protected $dataLimitField = 'admin_id';
+
+    /**
      * 数据限制开启时自动填充限制字段值
      */
     protected $dataLimitFieldAutoFill = true;
@@ -99,7 +112,7 @@ class Agent extends Controller
     /**
      * 引入后台控制器的traits
      */
-    use \app\admin\library\traits\Backend;
+    use \app\agent\library\traits\Backend;
 
     public function _initialize()
     {
@@ -194,7 +207,7 @@ class Agent extends Controller
             'modulename'     => $modulename,
             'controllername' => $controllername,
             'actionname'     => $actionname,
-            'jsname'         => 'backend/' . str_replace('.', '/', $controllername),
+            'jsname'         => 'agent/' . str_replace('.', '/', $controllername),
             'moduleurl'      => rtrim(url("/{$modulename}", '', false), '/'),
             'language'       => $lang,
             'referer'        => Session::get("referer")
@@ -418,6 +431,16 @@ class Agent extends Controller
             }
         };
         return [$where, $sort, $order, $offset, $limit, $page, $alias, $bind];
+    }
+
+    /**
+     * 获取数据限制的管理员ID
+     * 禁用数据限制时返回的是null
+     * @return mixed
+     */
+    protected function getDataLimitAdminIds()
+    {
+        return null;
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\admin\validate;
+namespace app\agent\validate;
 
 use think\Validate;
 
@@ -11,8 +11,9 @@ class User extends Validate
      */
     protected $rule = [
         'username' => 'require|regex:\w{3,30}|unique:user',
+        'nickname' => 'require|unique:user',
         'password' => 'regex:\S{6,30}',
-        'email'    => 'email|unique:user',
+        'email'    => 'require|email|unique:user',
         'mobile'   => 'unique:user'
     ];
 
@@ -30,8 +31,8 @@ class User extends Validate
      * 验证场景
      */
     protected $scene = [
-        'add'  => ['username', 'password', 'email', 'mobile'],
-        'edit' => ['username', 'password', 'email', 'mobile'],
+        'add'  => [],
+        'edit' => ['username', 'nickname', 'password', 'email', 'mobile'],
     ];
 
     public function __construct(array $rules = [], $message = [], $field = [])

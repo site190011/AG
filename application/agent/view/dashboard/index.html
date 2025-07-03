@@ -1,0 +1,229 @@
+<div class="row" style="margin-top:15px;" id="statistics">
+    <!-- 下级用户数量 -->
+    <div class="col-xs-6 col-md-3">
+        <div class="panel no-border">
+            <div class="panel-body">
+                <div class="panel-title">
+                    <span class="label label-primary pull-right"></span>
+                    <h5>下级用户数量</h5>
+                </div>
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="no-margins">{:$statData.sub_user_count}</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 下级代理数量 -->
+    <div class="col-xs-6 col-md-3">
+        <div class="panel no-border">
+            <div class="panel-body">
+                <div class="panel-title">
+                    <span class="label label-success pull-right"></span>
+                    <h5>下级代理数量</h5>
+                </div>
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="no-margins">{:$statData.sub_agent_count}</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 下级余额 -->
+    <div class="col-xs-6 col-md-3">
+        <div class="panel no-border">
+            <div class="panel-body">
+                <div class="panel-title">
+                    <span class="label label-info pull-right"></span>
+                    <h5>下级余额</h5>
+                </div>
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="no-margins">¥{:$statData.sub_agent_money_sum}</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 今日注册 -->
+    <div class="col-xs-6 col-md-3">
+        <div class="panel no-border">
+            <div class="panel-body">
+                <div class="panel-title">
+                    <span class="label label-warning pull-right"></span>
+                    <h5>今日注册</h5>
+                </div>
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="no-margins">{:$statData.today_register_count}</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 今日首充用户 -->
+    <div class="col-xs-6 col-md-3">
+        <div class="panel no-border">
+            <div class="panel-body">
+                <div class="panel-title">
+                    <span class="label label-primary pull-right"></span>
+                    <h5>今日首充用户</h5>
+                </div>
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="no-margins">{:$statData.today_first_recharge_count}</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 今日复充用户 -->
+    <div class="col-xs-6 col-md-3">
+        <div class="panel no-border">
+            <div class="panel-body">
+                <div class="panel-title">
+                    <span class="label label-success pull-right"></span>
+                    <h5>今日复充用户</h5>
+                </div>
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="no-margins">{:$statData.today_recharge_count}</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 今日充值金额 -->
+    <div class="col-xs-6 col-md-3">
+        <div class="panel no-border">
+            <div class="panel-body">
+                <div class="panel-title">
+                    <span class="label label-danger pull-right"></span>
+                    <h5>今日充值金额</h5>
+                </div>
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="no-margins">¥{:$statData.today_recharge_amount}</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 今日提现金额 -->
+    <div class="col-xs-6 col-md-3">
+        <div class="panel no-border">
+            <div class="panel-body">
+                <div class="panel-title">
+                    <span class="label label-info pull-right"></span>
+                    <h5>今日提现金额</h5>
+                </div>
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="no-margins">¥{:$statData.today_withdraw_amount}</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 今日红利 -->
+    <div class="col-xs-6 col-md-3">
+        <div class="panel no-border">
+            <div class="panel-body">
+                <div class="panel-title">
+                    <span class="label label-warning pull-right"></span>
+                    <h5>今日红利</h5>
+                </div>
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="no-margins">¥{:$statData.today_bonus_amount}</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 今日投注 -->
+    <div class="col-xs-6 col-md-3">
+        <div class="panel no-border">
+            <div class="panel-body">
+                <div class="panel-title">
+                    <span class="label label-primary pull-right"></span>
+                    <h5>今日投注</h5>
+                </div>
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="no-margins">¥{:$statData.today_bet_amount}</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 今日输赢 -->
+    <div class="col-xs-6 col-md-3">
+        <div class="panel no-border">
+            <div class="panel-body">
+                <div class="panel-title">
+                    <span class="label label-success pull-right"></span>
+                    <h5>今日输赢</h5>
+                </div>
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="no-margins">¥{:$statData.today_win_amount}</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 今日返水 -->
+    <div class="col-xs-6 col-md-3">
+        <div class="panel no-border">
+            <div class="panel-body">
+                <div class="panel-title">
+                    <span class="label label-danger pull-right"></span>
+                    <h5>今日返水</h5>
+                </div>
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 class="no-margins">¥{:$statData.today_rebate_amount}</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

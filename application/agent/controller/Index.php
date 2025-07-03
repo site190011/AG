@@ -34,7 +34,7 @@ class Index extends Agent
     {
 
         if (isset($_GET['addtabs'])) {
-            return redirect('/agent.php/index/dashboard.html?addtabs=1');
+            return redirect('/agent.php/dashboard.html?addtabs=1');
         }
 
         $cookieArr = ['adminskin' => "/^skin\-([a-z\-]+)\$/i", 'multiplenav' => "/^(0|1)\$/", 'multipletab' => "/^(0|1)\$/", 'show_submenu' => "/^(0|1)\$/"];
@@ -59,12 +59,6 @@ class Index extends Agent
         $this->view->assign('referermenu', $referermenu);
         $this->view->assign('title', __('Home'));
         return $this->view->fetch();
-    }
-
-    public function dashboard()
-    {
-        dd("ppkk");
- 
     }
 
     /**

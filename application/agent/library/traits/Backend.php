@@ -1,8 +1,8 @@
 <?php
 
-namespace app\admin\library\traits;
+namespace app\agent\library\traits;
 
-use app\admin\library\Auth;
+use app\agent\library\Auth;
 use Exception;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
@@ -162,6 +162,7 @@ trait Backend
             //是否采用模型验证
             if ($this->modelValidate) {
                 $name = str_replace("\\model\\", "\\validate\\", get_class($this->model));
+                // dd($name, $this->model, get_class($this->model));
                 $validate = is_bool($this->modelValidate) ? ($this->modelSceneValidate ? $name . '.edit' : $name) : $this->modelValidate;
                 $row->validateFailException()->validate($validate);
             }
