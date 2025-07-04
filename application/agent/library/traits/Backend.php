@@ -316,7 +316,7 @@ trait Backend
             $this->error(__('No rows were updated'));
         }
         parse_str($this->request->post('params'), $values);
-        $values = $this->auth->isSuperAdmin() ? $values : array_intersect_key($values, array_flip(is_array($this->multiFields) ? $this->multiFields : explode(',', $this->multiFields)));
+        $values = array_intersect_key($values, array_flip(is_array($this->multiFields) ? $this->multiFields : explode(',', $this->multiFields)));
         if (empty($values)) {
             $this->error(__('You have no permission'));
         }

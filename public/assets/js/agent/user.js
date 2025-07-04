@@ -51,7 +51,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 classname: 'btn btn-xs btn-primary btn-dialog',
                                 icon: 'fa fa-list',
                                 url: function(row) {
-                                    return 'user/user/promotion_user_config?uid=' + row.id;
+                                    return 'user/promotion_user_config?uid=' + row.id;
                                 },
                                 callback: function (data) {
                                     Layer.alert("接收到回传数据：" + JSON.stringify(data), {title: "回传数据"});

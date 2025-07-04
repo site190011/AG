@@ -18,6 +18,7 @@ class User extends Agent
 
     protected $noNeedLogin = [''];
     protected $model;
+    protected $multiFields = 'status,agent_promotion';
 
     public function _initialize()
     {
@@ -64,6 +65,9 @@ class User extends Agent
             if ($user) {
                 $pids = explode(',', $user->pid_path);
                 $pids[] = $user->id;
+                $pids = array_filter($pids, function ($pid) {
+                    return $pid > $this->auth->id;
+                });
                 $parents = \app\admin\model\User::where('id', 'in', $pids)->order('id asc')->select();
                 $this->view->assign('parents',$parents);
             }
@@ -107,5 +111,62 @@ class User extends Agent
 
         $this->view->assign('groupList', build_select('row[group_id]', \app\admin\model\UserGroup::column('id,name'), $row['group_id'], ['class' => 'form-control selectpicker']));
         return parent::edit($ids);
+    }
+
+    public function promotion_user_config() {
+
+        $uid = $this->request->get('uid');
+        $user = Db::name('user')->where('id',$uid)->find();
+        $row = Db::name('promotion_user_config')->where('user_id',$uid)->find();
+        $row_p = Db::name('promotion_user_config')->where('user_id',$user['pid'])->find();
+        $saveMessage = '';
+
+        if ($this->request->isPost()) {
+            $params = $this->request->post('row/a');
+
+            if ($params) { 
+                $params = array_filter($params);
+
+                $rebates = [
+                    'rebate1' => '真人',
+                    'rebate2' => '电子',
+                    'rebate3' => '彩票',
+                    'rebate4' => '体育',
+                    'rebate5' => '电竞',
+                    'rebate6' => '捕鱼',
+                    'rebate7' => '棋牌',
+                ];
+
+                foreach ($rebates as $key => $value) {
+                    if ($params[$key] > ($row_p[$key] - 0.1)) {
+                        $this->error("{$value}不允许设置高于上级的返佣比例");
+                    }
+                }
+
+                if ($row) {
+                    Db::name('promotion_user_config')->where('user_id', $params['user_id'])->update($params);
+                } else {
+                    Db::name('promotion_user_config')->insert($params);
+                }
+
+                $saveMessage = '保存成功';
+
+                $row = Db::name('promotion_user_config')->where('user_id', $params['user_id'])->find();
+            }
+        }
+
+        
+
+        if (!$row) {
+            $row = [
+                'user_id' => $uid,
+            ];
+        }
+
+        $this->view->assign('row', $row);
+        $this->view->assign('row_p', $row_p ?: []);
+        $this->view->assign('saveMessage', $saveMessage);
+
+        return $this->view->fetch();
     }
 }
