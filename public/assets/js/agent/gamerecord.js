@@ -5,7 +5,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // 初始化表格参数配置
             Table.api.init({
                 extend: {
-                    index_url: 'game/bet/index' + location.search,
+                    index_url: 'gamerecord/index' + location.search,
                     table: 'game_bet',
                 }
             });
@@ -41,7 +41,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
                         {field: 'user_id', title: __('User_id')},
-                        {field: 'player_id', title: __('Player_id'), operate: 'LIKE'},
+                        // {field: 'player_id', title: __('Player_id'), operate: 'LIKE'},
                         {field: 'plat_type', title: __('Plat_type'), operate: 'LIKE'},
                         {field: 'currency', title: __('Currency'), operate: 'LIKE'},
                         {field: 'game_type', title: __('Game_type'), searchList: typeSet, formatter: Table.api.formatter.normal},
@@ -64,12 +64,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
 
             // 为表格绑定事件
             Table.api.bindevent(table);
-        },
-        add: function () {
-            Controller.api.bindevent();
-        },
-        edit: function () {
-            Controller.api.bindevent();
         },
         api: {
             bindevent: function () {
