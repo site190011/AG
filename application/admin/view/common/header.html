@@ -88,10 +88,40 @@
                             'withdraw': new Audio('/assets/audio/withdraw.mp3')
                         };
 
-                        const playAudio = function(type){
-                            audios[type].play().then(() => {
-                                window.audioContextInitialized = true;
-                            });
+                        const audioQueue = []; // 音频播放队列
+                        let isPlaying = false; // 是否正在播放音频
+
+                        const playAudio = function(type) {
+                            // 将要播放的音频任务加入队列
+                            audioQueue.push(type);
+
+                            // 如果当前没有正在播放，则开始播放队列中的第一个音频
+                            if (!isPlaying) {
+                                processQueue();
+                            }
+                        };
+
+
+                        const processQueue = function() {
+                            if (audioQueue.length > 0) {
+                                isPlaying = true;
+                                const type = audioQueue.shift(); // 取出队列中的第一个音频类型
+                                const audio = audios[type];
+
+                                audio.play();
+
+                                // 监听音频播放结束事件，继续处理队列
+                                audio.onended = function() {
+                                    isPlaying = false;
+                                    processQueue();
+                                };
+
+                                // 处理可能的错误情况，如音频加载失败等
+                                audio.onerror = function() {
+                                    isPlaying = false;
+                                    processQueue();
+                                };
+                            }
                         };
 
 
@@ -130,10 +160,16 @@
                         }
 
                         window.addEventListener('load', () => {
-                            checkTodoCount();
-                            setInterval(function () {
+                            document.body.addEventListener('click', () => {
+                                if (window.audioContextInitialized) {
+                                    return;
+                                }
                                 checkTodoCount();
-                            }, 10000);
+                                setInterval(function () {
+                                    checkTodoCount();
+                                }, 10000);
+                                window.audioContextInitialized = true;
+                            });
                         });
 
                     </script>
