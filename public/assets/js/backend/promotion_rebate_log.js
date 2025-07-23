@@ -26,12 +26,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
-                        {field: 'user_id', title: __('User_id')},
-                        {field: 'player_uid', title: __('Player_uid')},
+                        {field: 'user_id', title: __('收水人信息'), formatter: function(value, row, index) {
+                            return 'ID :'+value+'<br>'+'用户名 :'+row.user_id_name;
+                        }},
+                        {field: 'player_uid', title: __('玩家信息'),formatter: function(value, row, index) {
+                            return 'ID :'+value+'<br>'+'用户名 :'+row.player_uid_name;
+                        }},
                         {field: 'related_bet_ids', title: __('Related_bet_ids'), operate: 'LIKE', table: table, class: 'autocontent', formatter: Table.api.formatter.content},
                         {field: 'bet_amount', title: __('Bet_amount'), operate:'BETWEEN'},
                         {field: 'rebate_amount', title: __('Rebate_amount'), operate:'BETWEEN'},
-                        {field: 'created_time', title: __('Created_time'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},
+                        {field: 'create_time', title: __('Created_time'), operate:'RANGE', addclass:'datetimerange', autocomplete:false, formatter: Table.api.formatter.datetime},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]

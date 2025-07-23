@@ -5,7 +5,7 @@ namespace app\admin\controller\user;
 use app\common\controller\Backend;
 use app\common\library\Auth;
 use think\Db;
-
+use app\common\model\User as ModelUser;
 /**
  * 会员管理
  *
@@ -169,6 +169,36 @@ class User extends Backend
         $this->view->assign('row_p', $row_p ?: []);
         $this->view->assign('saveMessage', $saveMessage);
 
+        return $this->view->fetch();
+    }
+    
+    
+    public function edit_money($id){
+    
+        // $type = [
+        //          'recharge'=>'存款',
+        //          'game_rebate'=>'返水',
+        //          'birthday'=>'生日礼金',
+        //          'VipUpgrade'=>'晋级礼金',
+        //          'monthlyRedPacket'=>'每月红包',
+        //          'exclusive'=>'专属豪礼'
+        //         ];
+        $row = ModelUser::get($id);
+        
+         if ($this->request->isPost()) {
+             $params = $this->request->post('row/a');
+             
+             if($params['status'] == 0){
+                 $params['num'] = -$params['num'];
+             }
+             try {
+                 $row->changeMoney('',$params['num'],$params['type'],$params['memo']);
+             } catch (Exception $e) {
+                 $this->error($e->getMessage());
+             }
+             $this->success('成功');
+         }
+        $this->assign('row',$row);
         return $this->view->fetch();
     }
 

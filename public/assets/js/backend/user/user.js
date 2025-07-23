@@ -79,7 +79,38 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             }
                         ]},
 
-                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
+                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate, buttons:  [
+                                {
+                                    name: 'edit_money',
+                                    text: __('加减款'),
+                                    title: __('加减款'),
+                                    classname: 'btn btn-xs btn-success btn-dialog',
+                                    // icon: 'fa fa-list',
+                                    url: 'user/user/edit_money?id={id}',
+                                    // refresh: true,
+                                    callback: function (data) {
+                                        // Layer.alert("接收到回传数据：" + JSON.stringify(data), {title: "回传数据"});
+                                    },
+                                    visible: function (row) {
+                                        return true;
+                                    }
+                                },
+                                  {
+                                    name: 'tikuan',
+                                    text: __('提款账号'),
+                                    title: __('提款账号'),
+                                    classname: 'btn btn-xs btn-info btn-dialog',
+                                    // icon: 'fa fa-list',
+                                    url: 'user/bank.card/index?user_id={id}',
+                                    // refresh: true,
+                                    callback: function (data) {
+                                        // Layer.alert("接收到回传数据：" + JSON.stringify(data), {title: "回传数据"});
+                                    },
+                                    visible: function (row) {
+                                        return true;
+                                    }
+                                },
+                            ]}
                     ]
                 ]
             });
@@ -91,6 +122,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Controller.api.bindevent();
         },
         edit: function () {
+            Controller.api.bindevent();
+        },
+        edit_money: function () {
             Controller.api.bindevent();
         },
         api: {

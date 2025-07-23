@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use app\common\controller\Backend;
+use think\Db;
 
 /**
  * 
@@ -33,5 +34,29 @@ class PromotionRebateLog extends Backend
      * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
      */
 
-
+        public function index()
+    {
+        //设置过滤方法
+        $this->request->filter(['strip_tags', 'trim']);
+        if (false === $this->request->isAjax()) {
+            return $this->view->fetch();
+        }
+        //如果发送的来源是 Selectpage，则转发到 Selectpage
+        if ($this->request->request('keyField')) {
+            return $this->selectpage();
+        }
+        [$where, $sort, $order, $offset, $limit] = $this->buildparams();
+        $list = $this->model
+                ->where($where)
+                ->order($sort, $order)
+                ->paginate($limit);
+        foreach ($list as &$v){
+            $v['user_id_name'] = Db::name('user')->where('id',$v['user_id'])->value('username');
+            $v['player_uid_name'] = Db::name('user')->where('id',$v['player_uid'])->value('username');
+            $v['related_bet_ids'] = Db::name('games')->where('id','in',$v['related_bet_ids'])->column('game_name');
+        }    
+            
+        $result = ['total' => $list->total(), 'rows' => $list->items()];
+        return json($result);
+    }
 }

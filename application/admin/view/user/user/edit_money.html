@@ -1,0 +1,59 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+    {:token()}
+    <input type="hidden" name="row[id]" value="{$row.id|htmlentities}">
+    <div class="form-group">
+        <label for="c-username" class="control-label col-xs-12 col-sm-2">{:__('Username')}:</label>
+        <div class="col-xs-12 col-sm-4">
+            <input id="c-username" data-rule="required" class="form-control" name="row[username]" type="text" value="{$row.username|htmlentities}" disabled>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-email" class="control-label col-xs-12 col-sm-2">{:__('Email')}:</label>
+        <div class="col-xs-12 col-sm-4">
+            <input id="c-email" data-rule="email" class="form-control" name="row[email]" type="text" value="{$row.email|htmlentities}" disabled>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-mobile" class="control-label col-xs-12 col-sm-2">{:__('Mobile')}:</label>
+        <div class="col-xs-12 col-sm-4">
+            <input id="c-mobile" data-rule="mobile" class="form-control" name="row[mobile]" type="text" value="{$row.mobile|htmlentities}" disabled>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-money" class="control-label col-xs-12 col-sm-2">{:__('Money')}:</label>
+        <div class="col-xs-12 col-sm-4">
+            <input id="c-money" data-rule="required" class="form-control" name="row[money]" type="number" value="{$row.money|htmlentities}" disabled>
+        </div>
+    </div>
+      <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('加款/扣款')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            {:build_radios('row[status]', ['1'=>__('加款'), '0'=>__('扣款')], 1)}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('类型')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            {:build_select('row[type]', ['recharge'=>__('存款'),'withdraw'=>'提现' ,'game_rebate'=>__('返水'), 'birthday'=>__('生日礼金'), 'VipUpgrade'=>__('晋级礼金'), 'monthlyRedPacket'=>__('每月红包'), 'exclusive'=>__('专属豪礼')], 'recharge')}
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-num" class="control-label col-xs-12 col-sm-2">{:__('操作金额')}:</label>
+        <div class="col-xs-12 col-sm-4">
+            <input id="c-num" data-rule="required" class="form-control" name="row[num]" type="number" value="">
+        </div>
+    </div>
+     <div class="form-group">
+        <label for="c-memo" class="control-label col-xs-12 col-sm-2">{:__('原因')}:</label>
+        <div class="col-xs-12 col-sm-4">
+            <input id="c-memo" data-rule="required" class="form-control" name="row[memo]" type="text" value="">
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+<button type="submit" class="btn btn-primary btn-embossed">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>
