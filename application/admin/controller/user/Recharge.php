@@ -95,6 +95,8 @@ class Recharge extends Backend
             'remark' => $params['remark'],
         ];
 
+        $result = null;
+
         Db::startTrans();
 
         if (($params['audit'] == 'pass') && ($row->success_time <= 0)) {
@@ -104,14 +106,12 @@ class Recharge extends Backend
             $user = \app\common\model\User::get($user_id);
 
             $user->changeMoney('balance', $row['amount'], 'recharge', '充值', 'user_recharge', $row->id, false);
-            
+            $result = $row->allowField(true)->save($data);
             $user->tryVipUpgrade(false);
-
         } else if ($params['audit'] == 'refuse') {
             $data['status'] = 2;
+            $result = $row->allowField(true)->save($data);
         }
-
-        $result = $row->allowField(true)->save($data);
 
         if ($result !== false) {
             Db::commit();

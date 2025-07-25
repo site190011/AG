@@ -25,16 +25,17 @@ class Recharge extends Model
 
     // 追加属性
     protected $append = [
-
+        'user'
     ];
     
-
+    /**
+     * 关联用户模型一对一关系
+     * @return \think\model\relation\HasOne
+     */
+    public function user()
+    {
+        return $this->hasOne('app\admin\model\User', 'id', 'user_id');
+    }
     
-
-
-
-
-
-
 
 }

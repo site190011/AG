@@ -230,12 +230,21 @@ class User extends Api
             $this->error('验证码错误');
         }
 
-        $invitation_uid = Db::name('user')->where('invitation_code', $invitation_code)->value('id') ?: 0;
+        if ($invitation_code) {
+            $invitation_info = Db::name('user')->where('invitation_code', $invitation_code)->find();
 
-        $ret = $this->auth->register($username, $password, '', '', [
-            'invitation_code' => strtoupper(Random::alnum()),
-            'invitation_uid' => $invitation_uid,
-        ]);
+            $extend = [];
+
+            if ($invitation_info) {
+                $extend['invitation_code'] = strtoupper(Random::alnum());
+                $extend['invitation_uid'] = $invitation_info['id'];
+                $extend['pid'] = $invitation_info['id'];
+                $extend['pid_path'] = $invitation_info['pid_path'] . $invitation_info['id'] . ',';
+                $extend['viplevel'] = 0;
+            }
+        }
+
+        $ret = $this->auth->register($username, $password, '', '', $extend);
 
         if ($ret) {
             $data = ['userinfo' => $this->auth->getUserinfo()];

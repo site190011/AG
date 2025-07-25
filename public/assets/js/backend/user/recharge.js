@@ -34,6 +34,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
                         {field: 'user_id', title: __('User_id')},
+                        // 添加用户名列
+                        {field: 'user.username', title: __('Username'), operate: 'LIKE'},
                         {field: 'order_no', title: __('Order_no'), operate: 'LIKE'},
                         {field: 'amount', title: __('Amount'), operate:'BETWEEN'},
                         {field: 'status', title: __('Status'), searchList: statusSet, formatter: Table.api.formatter.normal},

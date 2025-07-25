@@ -15,25 +15,47 @@
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">主分类:</label>
         <div class="col-xs-12 col-sm-8">
-                        
-            <select  id="c-type" data-rule="required" class="form-control selectpicker" name="row[type]">
-                {foreach name="typeList" item="vo"}
-                    <option value="{$key}" {in name="key" value="$row.type"}selected{/in}>{$vo}</option>
-                {/foreach}
-            </select>
-
+            {$typeList[$row['type']]}
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">子分类:</label>
         <div class="col-xs-12 col-sm-8">
-                        
             <select  id="c-type" data-rule="required" class="form-control selectpicker" name="row[type2]">
                 {foreach name="type2List" item="vo"}
                     <option value="{$key}" {in name="key" value="$row.type"}selected{/in}>{$vo}</option>
                 {/foreach}
             </select>
-
+        </div>
+    </div>
+     <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">奖励配置:</label>
+        <div class="col-xs-12 col-sm-8">
+            <dl class="fieldlist" data-template="configtpl" data-name="row[config]">
+                <dd>
+                    <ins>满足条件</ins>
+                    <ins>满足金额</ins>
+                    <ins>奖励金额</ins>
+                </dd>
+                <!-- 模板 -->
+                <script id="configtpl" type="text/html">
+                    <dd class="form-inline">
+                        <ins>
+                        <select id="c-is_open" data-rule="required" class="form-control selectpicker" name="<%=name%>[<%=index%>][type]">
+                            <option value="recharge_sum" <%= row.type == 'recharge_sum' ? 'selected' : '' %>>累计充值</option>
+                            <option value="recharge_day" <%= row.type == 'recharge_day' ? 'selected' : '' %>>每日充值</option>
+                            <option value="recharge_first" <%= row.type == 'recharge_first' ? 'selected' : '' %>>首次充值</option>
+                        </select>
+                        </ins>
+                        <ins><input type="number" name="<%=name%>[<%=index%>][amountNeeds]" class="form-control" value="<%=row.amountNeeds%>" /></ins>
+                        <ins><input type="number" name="<%=name%>[<%=index%>][amountBonus]" class="form-control" value="<%=row.amountBonus%>" /></ins>
+                        <span class="btn btn-sm btn-danger btn-remove"><i class="fa fa-times"></i></span>
+                        <span class="btn btn-sm btn-primary btn-dragsort"><i class="fa fa-arrows"></i></span>
+                    </dd>
+                </script>
+                <dd><a href="javascript:;" class="btn btn-sm btn-success btn-append"><i class="fa fa-plus"></i>添加奖励</a></dd>
+                <textarea name="row[config]" class="form-control hide" cols="30" rows="5">{$row.config|htmlentities}</textarea>
+            </dl>
         </div>
     </div>
     <div class="form-group">

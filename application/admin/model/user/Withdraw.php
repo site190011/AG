@@ -25,10 +25,18 @@ class Withdraw extends Model
 
     // 追加属性
     protected $append = [
-        'status_text'
+        'status_text',
+        'user'
     ];
     
-
+    /**
+     * 关联用户模型一对一关系
+     * @return \think\model\relation\HasOne
+     */
+    public function user()
+    {
+        return $this->hasOne('app\admin\model\User', 'id', 'user_id');
+    }
     
     public function getStatusList()
     {

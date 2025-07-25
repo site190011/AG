@@ -53,7 +53,7 @@ class Promotion extends Api
                 $whereRaw .= ' AND id = ' . $playerId;
             }
 
-            $list = Db::table('fa_user')->field('id,pid,pid_path,money')->whereRaw($whereRaw)->where('pid_path', 'like', '%,' . $user_id . ',%')->paginate();
+            $list = Db::table('fa_user')->field('id,pid,pid_path,money,username')->whereRaw($whereRaw)->where('pid_path', 'like', '%,' . $user_id . ',%')->paginate();
             $ids = $list->column('id');
             $parent_remarks = Db::table('fa_promotion_user_config')->whereIn('user_id', $ids)->column('parent_remark', 'user_id');
             $user_wallets = Db::table('fa_user_wallet')->whereIn('user_id', $ids)->column('*', 'user_id');

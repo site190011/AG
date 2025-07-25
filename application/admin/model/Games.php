@@ -56,7 +56,7 @@ class Games extends Model
            $build->where('game_name', 'like', '%' . $keyword . '%');
         }
 
-        $list = $build->order('sort', 'desc')->paginate(100);
+        $list = $build->order('sort', 'desc')->paginate(50);
 
         return $list;
     }
