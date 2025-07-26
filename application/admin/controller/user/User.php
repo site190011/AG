@@ -121,6 +121,11 @@ class User extends Backend
         $user = Db::name('user')->where('id',$uid)->find();
         $row = Db::name('promotion_user_config')->where('user_id',$uid)->find();
         $row_p = Db::name('promotion_user_config')->where('user_id',$user['pid'])->find();
+
+        if (!$row_p) {
+            $this->error('这个账号的上级没有设置返佣比例，请先设置上级的返佣比例');
+        }
+
         $saveMessage = '';
 
         if ($this->request->isPost()) {

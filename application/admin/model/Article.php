@@ -60,18 +60,23 @@ class Article extends Model
     /**
      * 获取子类型列表
      */
-    public function getType2List()
+    public function getType2List($type = '')
     {
-        return [
-            '' => '无',
-            'events_recharge' => '充值活动',
-            'events_vip' => 'VIP特权',
-            'events_cashback' => '高额返水',
-            'events_sports' => '体育优惠',
-            'events_daily' => '日常活动',
-            'events_newcomer' => '新人首存',
-            'events_limited' => '限时活动',
-        ];
+        switch ($type) {
+            case 'events':
+                return [
+                    '' => '无',
+                    'events_recharge' => '充值活动',
+                    'events_vip' => 'VIP特权',
+                    'events_cashback' => '高额返水',
+                    'events_sports' => '体育优惠',
+                    'events_daily' => '日常活动',
+                    'events_newcomer' => '新人首存',
+                    'events_limited' => '限时活动',
+                ];
+            default:
+                return [];
+        }
     }
 
     public function getStatusList()

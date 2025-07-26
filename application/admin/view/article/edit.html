@@ -28,17 +28,18 @@
             </select>
         </div>
     </div>
+    <?php if($row['type'] == 'events') {?>
      <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">奖励配置:</label>
         <div class="col-xs-12 col-sm-8">
-            <dl class="fieldlist" data-template="configtpl" data-name="row[config]">
+            <dl class="fieldlist" data-template="reward_rule_tpl" data-name="row[reward_rules]">
                 <dd>
                     <ins>满足条件</ins>
                     <ins>满足金额</ins>
                     <ins>奖励金额</ins>
                 </dd>
                 <!-- 模板 -->
-                <script id="configtpl" type="text/html">
+                <script id="reward_rule_tpl" type="text/html">
                     <dd class="form-inline">
                         <ins>
                         <select id="c-is_open" data-rule="required" class="form-control selectpicker" name="<%=name%>[<%=index%>][type]">
@@ -54,10 +55,11 @@
                     </dd>
                 </script>
                 <dd><a href="javascript:;" class="btn btn-sm btn-success btn-append"><i class="fa fa-plus"></i>添加奖励</a></dd>
-                <textarea name="row[config]" class="form-control hide" cols="30" rows="5">{$row.config|htmlentities}</textarea>
+                <textarea name="row[reward_rules]" class="form-control hide" cols="30" rows="5">{$row.reward_rules|htmlentities}</textarea>
             </dl>
         </div>
     </div>
+    <?php } ?>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Content')}:</label>
         <div class="col-xs-12 col-sm-8">

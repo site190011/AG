@@ -135,11 +135,11 @@ class Promotion extends Api
         $promotion_user_config = Db::table('fa_promotion_user_config')
             ->where('user_id', $uid)
             ->find();
-        
+
         $parent_user_config = Db::table('fa_promotion_user_config')
             ->where('user_id', $user['pid'])
             ->find();
-        
+
         $default_config = [
             'promotion_rebate1' => config("site.promotion_rebate1"),
             'promotion_rebate2' => config("site.promotion_rebate2"),
@@ -394,7 +394,7 @@ class Promotion extends Api
                 //今日输赢
                 'today_win_amount' => Db::table('fa_game_bet')
                     ->whereTime('create_time', 'today')
-                    ->whereIn('user_id',$sub_user_ids_fun)
+                    ->whereIn('user_id', $sub_user_ids_fun)
                     ->where('status', 1)
                     ->sum('settled_amount'),
                 //今日返水
@@ -502,10 +502,11 @@ class Promotion extends Api
                 ->where('id', 'in', $sub_user_ids_fun)
                 ->where('online_time', '>', time() - 600)
                 ->count();
-            $this->success('', ['totalCount' => $onlineUsers]);
         } catch (\Throwable $e) {
             $this->error($e->getMessage());
         }
+
+        $this->success('', ['totalCount' => $onlineUsers]);
     }
 
     /**
@@ -528,21 +529,12 @@ class Promotion extends Api
      */
     public function updateSubAccountIsAgent()
     {
-        Db::startTrans();
-        try {
-            $uid = $this->request->post('uid/d', 0);
-            $isAgent = $this->request->post('isAgent/d', 0);
-
-            Db::table('fa_user')
-                ->where('id', $uid)
-                ->update(['is_agent' => $isAgent]);
-
-            Db::commit();
-            $this->success('状态更新成功');
-        } catch (\Throwable $e) {
-            Db::rollback();
-            $this->error('更新失败: ' . $e->getMessage());
-        }
+        $uid = $this->request->post('uid/d', 0);
+        $isAgent = $this->request->post('isAgent/d', 0);
+        Db::table('fa_user')
+            ->where('id', $uid)
+            ->update(['agent_promotion' => $isAgent]);
+        $this->success('状态更新成功');
     }
 
     /**
@@ -564,14 +556,14 @@ class Promotion extends Api
                 ->where('status', 'completed')
                 ->whereTime('create_time', 'between', [$startTime, $endTime])
                 ->sum('amount');
-
-            $this->success('', [
-                'totalRecharge' => abs($recharge),
-                'totalWithdraw' => $withdraw
-            ]);
         } catch (\Throwable $e) {
             $this->error($e->getMessage());
         }
+
+        $this->success('', [
+            'totalRecharge' => abs($recharge),
+            'totalWithdraw' => $withdraw
+        ]);
     }
 
     /**
@@ -613,11 +605,12 @@ class Promotion extends Api
             Db::table('fa_user_money_log')->insert($moneyLog);
 
             Db::commit();
-            $this->success('充值成功');
         } catch (\Throwable $e) {
             Db::rollback();
             $this->error('操作失败: ' . $e->getMessage());
         }
+
+        $this->success('充值成功');
     }
 
     // 其他接口方法按照相同模式重构...

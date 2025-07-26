@@ -1,5 +1,5 @@
 @host = https://ag.luminbe.cn
-@token = 500a2467-8119-49a8-bfda-1ce5992b4d43
+@token = 91e1f90d-35a1-48a2-9f97-a884d1940448
 
 
 GET {{host}}/api/index/test
@@ -57,6 +57,9 @@ token: {{token}}
 ### 获取文章列表
 GET {{host}}/api/index/article_list?type=events
 Content-Type: application/json
+
+### 获取文章详情
+GET {{host}}/api/index/article_detail?id=1
 
 
 ### 获取trc20充值地址
@@ -131,4 +134,17 @@ Token: 232b735b-b2bb-42dd-a2c8-cc4cd66832bc
 
 ### 获取用户充值总额
 GET {{host}}/api/user/get_recharge_sum
+Token: {{token}}
+
+###
+GET {{host}}/api/Promotion/updateSubAccountIsAgent
+Token: {{token}}
+
+{
+    "uid": "33",
+    "isAgent": "1"
+}
+
+###
+GET {{host}}/api/promotion/subWithdrawList
 Token: {{token}}

@@ -23,7 +23,7 @@ class Article extends Backend
         parent::_initialize();
         $this->model = new \app\admin\model\Article;
         $this->view->assign("typeList", $this->model->getTypeList());
-        $this->view->assign("type2List", $this->model->getType2List());
+        $this->view->assign("type2List", $this->model->getType2List($_GET['type'] ?? ''));
         $this->view->assign("statusList", $this->model->getStatusList());
     }
 
@@ -35,5 +35,9 @@ class Article extends Backend
      * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
      */
 
+     public function edit($ids = null) {
+
+        return parent::edit($ids);
+     }
 
 }
