@@ -83,7 +83,26 @@ Content-Type: application/json
 GET {{host}}/api/games/getPlatTypeList
 
 ### 获取游戏列表
-GET {{host}}/api/games/getGameList
+GET {{host}}/api/games/getGameList?isFavorite=1
+Token: {{token}}
+
+### 添加收藏
+POST {{host}}/api/games/addFavorite
+Content-Type: application/json
+Token: {{token}}
+
+{
+    "gameId": "1"
+}
+
+### 取消收藏
+POST {{host}}/api/games/removeFavorite
+Content-Type: application/json
+Token: {{token}}
+
+{
+    "gameId": "1"
+}
 
 ### 获取客服列表
 GET {{host}}/api/index/get_kefu_list

@@ -32,7 +32,7 @@ class Games extends Model
 
 
 
-    public function getGameList($platType, $gameType, $gameType2, $isRecommend = null, $keyword = null)
+    public function getGameList($platType, $gameType, $gameType2, $isRecommend = null, $keyword = null, $favoriteUserId = null)
     {
         $build = $this->where('is_enable', 1);
 
@@ -54,6 +54,13 @@ class Games extends Model
 
         if ($keyword) {
            $build->where('game_name', 'like', '%' . $keyword . '%');
+        }
+
+        // 添加收藏筛选逻辑，使用子查询
+        if ($favoriteUserId) {
+            // 构建子查询获取用户收藏的游戏ID列表
+            $subQuery = Db::name('user_favorite_games')->where('user_id', $favoriteUserId)->field('game_id')->buildSql();
+            $build->whereRaw("id IN {$subQuery}");
         }
 
         $list = $build->order('sort', 'desc')->paginate(50);

@@ -20,9 +20,12 @@ class Games extends Api
         $gameType2 = $this->request->request('gameType2');
         $isRecommend = $this->request->request('isRecommend');
         $keyword = $this->request->request('keyword');
+        $isFavorite = $this->request->request('isFavorite');
+        $favoriteUserId = $isFavorite ? $this->auth->id ?? 0 : 0;
+
         $gameModel = new \app\admin\model\Games();
 
-        $list = $gameModel->getGameList($platType, $gameType, $gameType2, $isRecommend, $keyword);
+        $list = $gameModel->getGameList($platType, $gameType, $gameType2, $isRecommend, $keyword, $favoriteUserId);
 
         $this->success('success', $list);
     }
@@ -36,6 +39,66 @@ class Games extends Api
         $list = Db::name('game_plat')->select();
 
         $this->success('success', $list);
+    }
+
+    // 添加收藏游戏方法
+    public function addFavorite()
+    {
+        $gameId = $this->request->post('gameId');
+        
+        if (!$gameId) {
+            $this->error('参数错误');
+        }
+        
+        $userId = $this->auth->id;
+        
+        // 检查是否已收藏
+        $exist = Db::name('user_favorite_games')->where(['user_id' => $userId, 'game_id' => $gameId])->find();
+        
+        if ($exist) {
+            $this->error('已收藏该游戏');
+        }
+        
+        // 添加收藏
+        $result = Db::name('user_favorite_games')->insert([
+            'user_id' => $userId,
+            'game_id' => $gameId,
+            'create_time' => time()
+        ]);
+        
+        if ($result) {
+            $this->success('收藏成功');
+        } else {
+            $this->error('收藏失败');
+        }
+    }
+    
+    // 取消收藏游戏方法
+    public function removeFavorite()
+    {
+        $gameId = $this->request->post('gameId');
+        
+        if (!$gameId) {
+            $this->error('参数错误');
+        }
+        
+        $userId = $this->auth->id;
+        
+        // 检查是否已收藏
+        $exist = Db::name('user_favorite_games')->where(['user_id' => $userId, 'game_id' => $gameId])->find();
+        
+        if (!$exist) {
+            $this->error('未收藏该游戏');
+        }
+        
+        // 取消收藏
+        $result = Db::name('user_favorite_games')->where(['user_id' => $userId, 'game_id' => $gameId])->delete();
+        
+        if ($result) {
+            $this->success('取消收藏成功');
+        } else {
+            $this->error('取消收藏失败');
+        }
     }
 
     public function getGameEntryUrl()
