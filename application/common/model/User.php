@@ -182,10 +182,10 @@ class User extends Model
     }
     public function changeMoney($wallet_type, $amount, $logType, $logMsg = '', $related_table = null, $related_table_ids = null, $isStartTrans = true)
     {
-        if ($isStartTrans){
+        if ($isStartTrans) {
             Db::startTrans();
         }
-        
+
         $user_id = $this->id;
 
         // $wallet = $this->getWallet();
@@ -230,7 +230,7 @@ class User extends Model
 
         $this->money = $this->money + $amount;
 
-        if ($isStartTrans){
+        if ($isStartTrans) {
             Db::commit();
         }
 
@@ -280,7 +280,8 @@ class User extends Model
     /**
      * 尝试会员升级
      */
-    public function tryVipUpgrade($isStartTrans = true) {
+    public function tryVipUpgrade($isStartTrans = true)
+    {
         $currentRechargeSum = Db::table('fa_user_recharge')->where('user_id', $this->id)->where('status', 1)->sum('amount');
         $vipList = Db::table('fa_vip_config')->where('level', '>', $this->viplevel)->order('level', 'asc')->select();
 
@@ -291,5 +292,114 @@ class User extends Model
                 $this->save();
             }
         }
+    }
+
+    /**
+     * 领取奖励
+     * @param int $reward_id 奖励ID
+     */
+    public function grantReward($reward_id)
+    {
+        $reward = Db::name('user_reward')->where('id', $reward_id)->where('user_id', $this->id)->where('is_grant', 0)->find();
+        if (!$reward) {
+            return false;
+        }
+
+        $this->changeMoney('balance', $reward['amount'], 'RewardGrant', $reward['remark'], 'user_reward', $reward_id, false);
+        Db::name('user_reward')->where('id', $reward_id)->update(['is_grant' => 1]);
+
+        return true;
+    }
+
+    /**
+     * 尝试发放活动奖励
+     */
+    public function tryActivityReward()
+    {
+        $activitys = Db::name('article')->where("status", 'published')->where("type", "events")->select();
+
+        foreach ($activitys as $activity) {
+            $reward_rules = json_decode($activity['reward_rules'], true);
+            if (is_array($reward_rules) && !empty($reward_rules)) {
+                foreach ($reward_rules as $rule) {
+                    $amountNeeds = $rule['amountNeeds'];
+                    $amountBonus = $rule['amountBonus'];
+                    $slug = "{$rule['type']}_{$activity['id']}_{$this->id}";
+
+                    if ($amountBonus <= 0 || $amountNeeds <= 0) {
+                        //奖励金额或需求金额不合法
+                        continue;
+                    }
+
+                    $isGranted = Db::name('user_reward')->where('slug', $slug)->count() > 0;
+                    if ($isGranted) {
+                        //奖励已发放
+                        continue;
+                    }
+
+                    $build = Db::name('user_recharge')->where('user_id', $this->id)->where('status', 1);
+                    switch ($rule['type']) {
+                        case 'recharge_sum':
+                            //累计充值
+                            $totalRecharge = $build->sum('amount');
+                            if ($totalRecharge >= $amountNeeds) {
+                                Db::name('user_reward')->insert([
+                                    'user_id' => $this->id,
+                                    'type' => 'recharge_sum',
+                                    'slug' => $slug,
+                                    'amount' => $amountBonus,
+                                    'is_grant' => 0,
+                                    'remark' => '累计充值满' . $amountNeeds . '送' . $amountBonus . '元',
+                                    'create_time' => time(),
+                                    'update_time' => time(),
+                                ]);
+                            }
+                            break;
+                        case 'recharge_day':
+                            //每日充值
+                            $todayRecharge = $build->whereTime('create_time', 'today')->sum('amount');
+                            if ($todayRecharge >= $amountNeeds) {
+                                Db::name('user_reward')->insert([
+                                    'user_id' => $this->id,
+                                    'type' => 'recharge_day',
+                                    'slug' => $slug,
+                                    'amount' => $amountBonus,
+                                    'is_grant' => 0,
+                                    'remark' => '每日充值满' . $amountNeeds . '送' . $amountBonus . '元',
+                                    'create_time' => time(),
+                                    'update_time' => time(),
+                                ]);
+                            }
+                            break;
+                        case 'recharge_first':
+                            //首次充值
+                            $isFirstRecharge = $build->count() == 1;
+                            if (!$isFirstRecharge) {
+                                break; //如果不是首次充值，则跳过
+                            }
+                            $totalRecharge = Db::name('user_recharge')->where('user_id', $this->id)->where('status', 1)->sum('amount');
+                            if ($totalRecharge >= $amountNeeds) {
+                                //如果首次充值满足条件，则发放奖励
+                                Db::name('user_reward')->insert([
+                                    'user_id' => $this->id,
+                                    'type' => 'recharge_first',
+                                    'slug' => $slug,
+                                    'amount' => $amountBonus,
+                                    'is_grant' => 0,
+                                    'remark' => '首次充值送' . $amountBonus . '元',
+                                    'create_time' => time(),
+                                    'update_time' => time(),
+                                ]);
+                            }
+                    }
+                }
+            }
+        }
+    }
+
+    public function onRechargeSuccess($isStartTrans = true)
+    {
+        $this->tryVipUpgrade($isStartTrans);
+        $this->tryActivityReward();
     }
 }

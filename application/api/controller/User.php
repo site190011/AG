@@ -868,4 +868,53 @@ class User extends Api
 
         $this->success('获取成功', $sum);
     }
+    
+    /**
+     * 分页查看奖励列表
+     */
+    public function get_reward_list()
+    {
+        $user = $this->auth->getUser();
+        $user_id = $user->id;
+        
+        $type = $this->request->get('type', '');
+        $is_grant = $this->request->get('is_grant', null);
+        
+        $query = Db::name('user_reward')->where('user_id', $user_id);
+            
+        if ($type) {
+            $query->where('type', $type);
+        }
+        
+        switch ($is_grant) {
+            case '0':
+                $query->where('is_grant', 0);
+                break;
+            case '1':
+                $query->where('is_grant', 1);
+                break;
+        }
+        
+        $list = $query->order('id', 'desc')->paginate(20);
+            
+        $this->success('获取成功', $list);
+    }
+    
+    /**
+     * 领取奖励到余额
+     */
+    public function claim_reward()
+    {
+        $reward_id = $this->request->post('reward_id');
+        
+        // 使用模型中封装好的方法领取奖励
+        $user = $this->auth->getUser();
+        $result = $user->grantReward($reward_id);
+        
+        if ($result === false) {
+            $this->error('奖励不存在或已领取');
+        }
+        
+        $this->success('领取成功');
+    }
 }

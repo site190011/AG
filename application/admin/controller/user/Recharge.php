@@ -107,7 +107,7 @@ class Recharge extends Backend
 
             $user->changeMoney('balance', $row['amount'], 'recharge', '充值', 'user_recharge', $row->id, false);
             $result = $row->allowField(true)->save($data);
-            $user->tryVipUpgrade(false);
+            $user->onRechargeSuccess(false);
         } else if ($params['audit'] == 'refuse') {
             $data['status'] = 2;
             $result = $row->allowField(true)->save($data);

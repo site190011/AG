@@ -36,7 +36,10 @@ class Article extends Backend
      */
 
      public function edit($ids = null) {
-
+        $row = $this->model->get($ids);
+        if ($row) {
+            $this->view->assign("type2List", $this->model->getType2List($row['type'] ?? ''));
+        }
         return parent::edit($ids);
      }
 

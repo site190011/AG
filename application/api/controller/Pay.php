@@ -99,6 +99,8 @@ class Pay extends Api
             'remark' => '接口回调',
         ]);
 
+        $user->onRechargeSuccess();
+
         $logDir = ROOT_PATH . 'runtime' . DS . 'log' . DS . 'pay';
 
         if (!is_dir($logDir)) {

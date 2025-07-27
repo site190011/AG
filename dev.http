@@ -136,6 +136,17 @@ Token: 232b735b-b2bb-42dd-a2c8-cc4cd66832bc
 GET {{host}}/api/user/get_recharge_sum
 Token: {{token}}
 
+### 获取用户可领取奖励
+GET {{host}}/api/user/get_reward_list
+Token: {{token}}
+
+### 领取奖励到余额
+GET {{host}}/api/user/claim_reward
+Token: {{token}}
+
+{
+    "reward_id": "1"
+}
 ###
 GET {{host}}/api/Promotion/updateSubAccountIsAgent
 Token: {{token}}
