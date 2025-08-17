@@ -328,6 +328,7 @@ class Auth
                 $this->_user = $user;
 
                 $this->_token = Random::uuid();
+                Token::clear($user->id);
                 Token::set($this->_token, $user->id, $this->keeptime);
 
                 $this->_logined = true;

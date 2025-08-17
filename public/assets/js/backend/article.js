@@ -26,6 +26,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 'news' : '新闻',
                 'manual' : '教程',
                 'poster' : '海报',
+                'sponsor': '赞助'
             };
             var statusSet = {
                 'draft': '未发布',

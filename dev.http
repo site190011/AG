@@ -55,7 +55,7 @@ token: {{token}}
 }
 
 ### 获取文章列表
-GET {{host}}/api/index/article_list?type=events
+GET {{host}}/api/index/article_list?type=sponsor
 Content-Type: application/json
 
 ### 获取文章详情
