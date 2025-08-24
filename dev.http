@@ -178,3 +178,7 @@ Token: {{token}}
 ###
 GET {{host}}/api/promotion/subWithdrawList
 Token: {{token}}
+
+### 获取下级返佣比例
+GET {{host}}/api/promotion/getSubRebate
+Token: {{token}}

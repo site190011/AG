@@ -132,27 +132,21 @@ class Promotion extends Api
             ->where('id', $uid)
             ->find();
 
-        $promotion_user_config = Db::table('fa_promotion_user_config')
+        $user_config = Db::table('fa_promotion_user_config')
             ->where('user_id', $uid)
             ->find();
 
-        $parent_user_config = Db::table('fa_promotion_user_config')
+        $parent_config = Db::table('fa_promotion_user_config')
             ->where('user_id', $user['pid'])
             ->find();
 
-        $default_config = [
-            'promotion_rebate1' => config("site.promotion_rebate1"),
-            'promotion_rebate2' => config("site.promotion_rebate2"),
-            'promotion_rebate3' => config("site.promotion_rebate3"),
-            'promotion_rebate4' => config("site.promotion_rebate4"),
-            'promotion_rebate5' => config("site.promotion_rebate5"),
-            'promotion_rebate6' => config("site.promotion_rebate6"),
-            'promotion_rebate7' => config("site.promotion_rebate7"),
-        ];
+        $default_config = Db::table('fa_promotion_user_config')
+            ->where('user_id', 0)
+            ->find();
 
         $this->success('', [
-            'promotion_user_config' => $promotion_user_config,
-            'parent_user_config' => $parent_user_config,
+            'user_config' => $user_config,
+            'parent_config' => $parent_config,
             'default_config' => $default_config
         ]);
     }

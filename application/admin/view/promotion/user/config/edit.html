@@ -1,5 +1,11 @@
 <form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
 
+    <?php if ($row['user_id'] == 0): ?>
+        <input type="hidden" name="row[user_id]" value="{$row.user_id}">
+        <div class="form-group text-center">
+            <h2>系统默认返水配置</h2>
+        </div>
+    <?php else: ?>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Pid')}:</label>
         <div class="col-xs-12 col-sm-8">
@@ -12,6 +18,8 @@
             <input id="c-user_id" data-rule="required" data-source="user/user/index" data-field="nickname" class="form-control selectpage" name="row[user_id]" type="text" value="{$row.user_id|htmlentities}">
         </div>
     </div>
+    <?php endif; ?>
+
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Rebate1')}:</label>
         <div class="col-xs-12 col-sm-8 rebateItem">
@@ -54,6 +62,7 @@
             <input id="c-rebate7" class="form-control" name="row[rebate7]" type="number" value="{$row.rebate7|htmlentities}">%
         </div>
     </div>
+    <?php if ($row['user_id'] != 0): ?>
     <div class="form-group">
         <label class="control-label col-xs-12 col-sm-2">{:__('Parent_remark')}:</label>
         <div class="col-xs-12 col-sm-8">
@@ -66,6 +75,7 @@
             <input id="c-kefuUrl" class="form-control" name="row[kefuUrl]" type="text" value="{$row.kefuUrl|htmlentities}">
         </div>
     </div>
+    <?php endif; ?>
     <div class="form-group layer-footer">
         <label class="control-label col-xs-12 col-sm-2"></label>
         <div class="col-xs-12 col-sm-8">
