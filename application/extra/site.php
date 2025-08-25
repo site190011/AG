@@ -51,4 +51,5 @@ return array (
   'max_recharge' => '88888',
   'recharge_switch' => 'on',
   'kefu_url' => 'http://kefu.ag.cc',
+  'CDN' => 'https://ag-dev-20250825.oss-cn-hongkong.aliyuncs.com',
 );

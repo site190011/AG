@@ -27,6 +27,10 @@ class Games extends Api
 
         $list = $gameModel->getGameList($platType, $gameType, $gameType2, $isRecommend, $keyword, $favoriteUserId);
 
+        foreach ($list as &$item) {
+            $item['image'] = config('site.CDN').$item['image'];
+        }
+
         $this->success('success', $list);
     }
 
