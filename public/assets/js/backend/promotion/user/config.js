@@ -35,9 +35,10 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         { checkbox: true },
                         { field: 'id', title: __('Id') },
                         { field: 'pid', title: __('Pid') },
+                        { field: 'user_id', title: __('用户ID') },
                         {
-                            field: 'user_id', title: __('User_id'), formatter: function (value, row, index) {
-                                return '<a href="javascript:;" class="text-primary edit-user" data-id="' + row.id + '">' + value + '</a>';
+                            field: 'user_id', title: '用户名', formatter: function (value, row, index) {
+                                return '<a href="javascript:;" class="text-primary edit-user" data-id="' + row.user_id + '">' + row.user_name + '</a>';
                             }
                         },
                         { field: 'rebate1', title: __('Rebate1'), formatter: formatter.rebate },

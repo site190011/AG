@@ -25,14 +25,27 @@ class Config extends Model
 
     // 追加属性
     protected $append = [
-
+        'user_name'
     ];
-    
 
-    
+    /**
+     * 关联用户表一对一关系
+     */
+    public function user()
+    {
+        return $this->hasOne(\app\admin\model\User::class, 'id', 'user_id');
+    }
 
+    public function getUserNameAttr($value, $data)
+    {
+        $user = $this->user()->find();
 
-
+        if ($user) {
+            return $user->username;
+        }
+        
+        return '-';
+    }
 
 
 

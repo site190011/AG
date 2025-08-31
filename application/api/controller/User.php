@@ -230,10 +230,9 @@ class User extends Api
             $this->error('验证码错误');
         }
 
+        $extend = [];
         if ($invitation_code) {
             $invitation_info = Db::name('user')->where('invitation_code', $invitation_code)->find();
-
-            $extend = [];
 
             if ($invitation_info) {
                 $extend['invitation_code'] = strtoupper(Random::alnum());
