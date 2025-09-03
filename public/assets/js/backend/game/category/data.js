@@ -5,13 +5,13 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // 初始化表格参数配置
             Table.api.init({
                 extend: {
-                    index_url: 'game/category2/index' + location.search,
-                    add_url: 'game/category2/add',
-                    edit_url: 'game/category2/edit',
-                    del_url: 'game/category2/del',
-                    multi_url: 'game/category2/multi',
-                    import_url: 'game/category2/import',
-                    table: 'game_category2',
+                    index_url: 'game/category/data/index' + location.search,
+                    add_url: 'game/category/data/add',
+                    edit_url: 'game/category/data/edit',
+                    del_url: 'game/category/data/del',
+                    multi_url: 'game/category/data/multi',
+                    import_url: 'game/category/data/import',
+                    table: 'game_category_data',
                 }
             });
 
@@ -26,13 +26,8 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
-                        {field: 'parent_id', title: __('Parent_id')},
-                        {field: 'key', title: __('Key'), operate: 'LIKE'},
-                        {field: 'name', title: __('Name'), operate: 'LIKE', table: table, class: 'autocontent', formatter: Table.api.formatter.content},
-                        {field: 'status', title: __('Status')},
-                        {field: 'sort_order', title: __('Sort_order')},
-                        {field: 'created_at', title: __('Created_at'), operate:'RANGE', addclass:'datetimerange', autocomplete:false},
-                        {field: 'updated_at', title: __('Updated_at'), operate:'RANGE', addclass:'datetimerange', autocomplete:false},
+                        {field: 'category2_id', title: __('Category2_id')},
+                        {field: 'game_id', title: __('Game_id')},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
                     ]
                 ]

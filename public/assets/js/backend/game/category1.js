@@ -28,7 +28,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'id', title: __('Id')},
                         {field: 'key', title: __('Key'), operate: 'LIKE'},
                         {field: 'name', title: __('Name'), operate: 'LIKE', table: table, class: 'autocontent', formatter: Table.api.formatter.content},
-                        {field: 'image_url', title: __('Image_url'), operate: 'LIKE', formatter: Table.api.formatter.url},
                         {field: 'status', title: __('Status')},
                         {field: 'sort_order', title: __('Sort_order')},
                         {field: 'created_at', title: __('Created_at'), operate:'RANGE', addclass:'datetimerange', autocomplete:false},

@@ -1,0 +1,21 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Category2_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-category2_id" data-rule="required" data-source="category2/index" class="form-control selectpage" name="row[category2_id]" type="text" value="{$row.category2_id|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Game_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-game_id" data-rule="required" data-source="game/index" class="form-control selectpage" name="row[game_id]" type="text" value="{$row.game_id|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-primary btn-embossed disabled">{:__('OK')}</button>
+        </div>
+    </div>
+</form>
