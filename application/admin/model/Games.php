@@ -32,16 +32,12 @@ class Games extends Model
 
 
 
-    public function getGameList($platType, $gameType, $gameType2, $isRecommend = null, $keyword = null)
+    public function getGameList($platType, $gameType, $custom_type1, $isRecommend = null, $keyword = null)
     {
         $build = $this->where('is_enable', 1);
 
         if (($gameType !== 'all') && $gameType ) {
             $build->where('game_type', $gameType);
-        }
-
-        if ($gameType2) {
-            $build->where('game_type2', $gameType2);
         }
 
         if ($platType) {
@@ -61,19 +57,34 @@ class Games extends Model
         return $list;
     }
 
-    /**
-     * 获取子类型列表
-     */
-    public function getType2List()
+    public function getTypeList()
     {
         return [
-            '' => '无',
-            'f1' => '分类1',
-            'f2' => '分类2',
-            'f3' => '分类3',
-            'f4' => '分类4',
+            1 => '真人',
+            2 => '电子',
+            3 => '彩票',
+            4 => '体育',
+            5 => '电竞',
+            6 => '捕鱼',
+            7 => '棋牌'
         ];
     }
+    /**
+     * 自定义大分类
+     */
+    public function getCustomType1List()
+    {
+        return config('site.type1');
+    }
+
+    /**
+     * 自定义小分类
+     */
+    public function getCustomType2List()
+    {
+        return config('site.type2');
+    }
+    
 
 
     /**

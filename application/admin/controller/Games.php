@@ -22,8 +22,6 @@ class Games extends Backend
     {
         parent::_initialize();
         $this->model = new \app\admin\model\Games;
-        $this->view->assign("type2List", $this->model->getType2List());
-
     }
 
 

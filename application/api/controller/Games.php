@@ -10,7 +10,7 @@ use think\Db;
  */
 class Games extends Api
 {
-    protected $noNeedLogin = ['getGameList', 'getPlatTypeList'];
+    protected $noNeedLogin = ['getGameList', 'getPlatTypeList', 'getGameListByCustomType'];
     protected $noNeedRight = ['*'];
 
     public function getGameList()
@@ -28,10 +28,35 @@ class Games extends Api
         $list = $gameModel->getGameList($platType, $gameType, $gameType2, $isRecommend, $keyword, $favoriteUserId);
 
         foreach ($list as &$item) {
-            $item['image'] = config('site.CDN').$item['image'];
+            $item['image'] = config('site.CDN') . $item['image'];
         }
 
         $this->success('success', $list);
+    }
+
+    public function getGameListByCustomType()
+    {
+        $gameModel = new \app\admin\model\Games();
+        $game_list = $gameModel->where('is_enable', 1)->whereNotNull('custom_type1')->select();
+        $type_set = $gameModel->getCustomType1List();
+        $game_type_list = [];
+
+        foreach ($game_list as $game) {
+            $type = $game['custom_type1'] ?? '-';
+            $typeName = $type_set[$game['custom_type1']] ?? '未分类';
+
+            if (!isset($game_type_list[$type])) {
+                $game_type_list[$type] = [
+                    'type' => $type,
+                    'type_name' => $typeName,
+                    'games' => []
+                ];
+            }
+
+            $game_type_list[$type]['games'][] = $game;
+        }
+
+        $this->success('success', $game_type_list);
     }
 
     /**
@@ -49,55 +74,55 @@ class Games extends Api
     public function addFavorite()
     {
         $gameId = $this->request->post('gameId');
-        
+
         if (!$gameId) {
             $this->error('参数错误');
         }
-        
+
         $userId = $this->auth->id;
-        
+
         // 检查是否已收藏
         $exist = Db::name('user_favorite_games')->where(['user_id' => $userId, 'game_id' => $gameId])->find();
-        
+
         if ($exist) {
             $this->error('已收藏该游戏');
         }
-        
+
         // 添加收藏
         $result = Db::name('user_favorite_games')->insert([
             'user_id' => $userId,
             'game_id' => $gameId,
             'create_time' => time()
         ]);
-        
+
         if ($result) {
             $this->success('收藏成功');
         } else {
             $this->error('收藏失败');
         }
     }
-    
+
     // 取消收藏游戏方法
     public function removeFavorite()
     {
         $gameId = $this->request->post('gameId');
-        
+
         if (!$gameId) {
             $this->error('参数错误');
         }
-        
+
         $userId = $this->auth->id;
-        
+
         // 检查是否已收藏
         $exist = Db::name('user_favorite_games')->where(['user_id' => $userId, 'game_id' => $gameId])->find();
-        
+
         if (!$exist) {
             $this->error('未收藏该游戏');
         }
-        
+
         // 取消收藏
         $result = Db::name('user_favorite_games')->where(['user_id' => $userId, 'game_id' => $gameId])->delete();
-        
+
         if ($result) {
             $this->success('取消收藏成功');
         } else {
@@ -162,7 +187,6 @@ class Games extends Api
 
             $agapi->transfer($playerId, $platType, $user['money']);
             $res = $agapi->getGameEntryUrl($playerId, $game, $return_url);
-
         } catch (\Throwable $e) {
             $this->error('无法获取入口地址', json_decode($e->getMessage(), true) ?: $e->getMessage());
         }
@@ -174,7 +198,8 @@ class Games extends Api
         }
     }
 
-    public function getBalance(){
+    public function getBalance()
+    {
         $agapi = new \app\admin\model\AgApi();
         $user = $this->auth->getUser();
         $platType = $this->request->request('platType');

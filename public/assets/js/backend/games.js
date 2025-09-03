@@ -55,7 +55,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'selectpage'], functi
                             formatter: function(value, row) {
                                 return value + "|" + row.game_name;
                             }},
-                        {field: 'game_type', title: __('Game_type'), operate: 'LIKE', formatter: function(volue, row) {
+                        {field: 'game_type', title: '类型', operate: 'LIKE', formatter: function(volue, row) {
                             const typeList= {
                                 1: '真人',
                                 2: '电子',
