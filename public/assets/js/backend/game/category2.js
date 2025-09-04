@@ -34,7 +34,23 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'sort_order', title: __('Sort_order')},
                         {field: 'created_at', title: __('Created_at'), operate:'RANGE', addclass:'datetimerange', autocomplete:false},
                         {field: 'updated_at', title: __('Updated_at'), operate:'RANGE', addclass:'datetimerange', autocomplete:false},
-                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
+                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate, buttons: [
+                            {
+                                name: 'edit_game_list',
+                                text: __('绑定游戏'),
+                                title: __('绑定游戏'),
+                                classname: 'btn btn-xs btn-success btn-dialog',
+                                // icon: 'fa fa-list',
+                                url: 'game/category/data?bindid={id}',
+                                // refresh: true,
+                                callback: function (data) {
+                                    // Layer.alert("接收到回传数据：" + JSON.stringify(data), {title: "回传数据"});
+                                },
+                                visible: function (row) {
+                                    return true;
+                                }
+                            }
+                        ]}
                     ]
                 ]
             });
@@ -51,6 +67,29 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         api: {
             bindevent: function () {
                 Form.api.bindevent($("form[role=form]"));
+            },
+            formatter: {
+                // 添加绑定游戏按钮
+                operate: function (value, row, index) {
+                    var table = this;
+                    // // 操作配置
+                    // var options = table.bootstrapTable('getOptions');
+                    // 默认操作按钮
+                    var buttons = $.extend([], this.buttons || []);
+                    
+                    // 添加绑定游戏按钮
+                    buttons.push({
+                        name: 'bind',
+                        text: '绑定游戏',
+                        title: '绑定游戏',
+                        classname: 'btn btn-xs btn-primary btn-dialog',
+                        icon: 'fa fa-link',
+                        url: 'game/category/data/index?category2_id=' + row.id
+                    });
+                    
+                    // 调用默认的操作按钮渲染
+                    return Table.api.formatter.operate.call(table, value, row, index, buttons);
+                }
             }
         }
     };

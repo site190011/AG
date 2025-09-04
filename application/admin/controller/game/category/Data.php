@@ -17,6 +17,7 @@ class Data extends Backend
      * @var \app\admin\model\game\category\Data
      */
     protected $model = null;
+    protected $model_d = null;
 
     public function _initialize()
     {
@@ -33,5 +34,17 @@ class Data extends Backend
      * 需要将application/admin/library/traits/Backend.php中对应的方法复制到当前控制器,然后进行修改
      */
 
+    public function index()
+    {
+        $bindid = $this->request->request('bindid');
+        $this->model_d = new \app\admin\model\game\category\Data;
+        $this->model = new \app\admin\model\Games;
 
+        
+
+        // $this->model->field('games.id as game_id, games.game_code, games.game_name, games.ingress, games.plat_type, games.is_enable as games_is_enable, game_category_data.id as data_id');
+        // $this->model->join('game_category_data', 'game_category_data.game_id = games.id');
+        // $this->model->where('games_is_enable', 1);
+        return parent::index();
+    }
 }

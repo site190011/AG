@@ -21,14 +21,48 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
                 pk: 'id',
-                sortName: 'id',
+                sortName: 'game_id',
                 columns: [
                     [
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
-                        {field: 'category2_id', title: __('Category2_id')},
-                        {field: 'game_id', title: __('Game_id')},
-                        {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate}
+                        {field: 'plat_type', 
+                            title: '平台', 
+                            operate: '=', 
+                            class: 'selectpage', 
+                            extend: [
+                                'data-source="/api/games/getPlatTypeList"',
+                                'data-field="name"',
+                                'data-primary-key="key"',
+                                'data-select-only="true"',
+                                'data-pagination="true"'
+                            ].join(' '),
+                            formatter: function(value, row) {
+                                return value + "|" + row.game_name;
+                            }},
+                        {field: 'game_type', title: '类型', operate: 'LIKE', formatter: function(volue, row) {
+                            const typeList= {
+                                1: '真人',
+                                2: '电子',
+                                3: '彩票',
+                                4: '体育',
+                                5: '电竞',
+                                6: '捕鱼',
+                                7: '棋牌'
+                            };
+                            return volue + "|" + typeList[volue];
+                        }},
+                        {field: 'game_code', title: 'CODE', operate: 'LIKE'},
+                        {field: 'ingress', title: 'Ingress', operate: 'LIKE', formatter: function(volue, row) {
+                            const ingressList= {
+                                1: '电脑网页',
+                                2: '手机网页',
+                                3: '电脑/手机网页'
+                            };
+                            return volue + "|" + ingressList[volue];
+                        }},
+                        {field: 'game_name', title: '游戏名', operate: 'LIKE', table: table, class: 'autocontent', formatter: Table.api.formatter.content},
+                        {field: 'bind', title: '绑定', readonly: true, formatter: Table.api.formatter.toggle, events: Table.api.events.toggle},
                     ]
                 ]
             });
