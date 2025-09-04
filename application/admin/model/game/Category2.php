@@ -25,8 +25,14 @@ class Category2 extends Model
 
     // 追加属性
     protected $append = [
-
+        'game_count'
     ];
+
+    public function getGameCountAttr($value, $data)
+    {
+        $count = \think\Db::name('game_category_data')->where('category2_id', $data['id'])->count();
+        return $count;
+    }
     
 
     
