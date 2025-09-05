@@ -30,7 +30,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'game_count', title: '游戏数量'},
                         {field: 'key', title: __('Key'), operate: 'LIKE'},
                         {field: 'name', title: __('Name'), operate: 'LIKE', table: table, class: 'autocontent', formatter: Table.api.formatter.content},
-                        {field: 'status', title: __('Status')},
+                        {field: 'status', title: __('Status'), formatter: Table.api.formatter.toggle},
                         {field: 'sort_order', title: __('Sort_order')},
                         {field: 'created_at', title: __('Created_at'), operate:'RANGE', addclass:'datetimerange', autocomplete:false},
                         {field: 'updated_at', title: __('Updated_at'), operate:'RANGE', addclass:'datetimerange', autocomplete:false},
@@ -67,29 +67,6 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         api: {
             bindevent: function () {
                 Form.api.bindevent($("form[role=form]"));
-            },
-            formatter: {
-                // 添加绑定游戏按钮
-                operate: function (value, row, index) {
-                    var table = this;
-                    // // 操作配置
-                    // var options = table.bootstrapTable('getOptions');
-                    // 默认操作按钮
-                    var buttons = $.extend([], this.buttons || []);
-                    
-                    // 添加绑定游戏按钮
-                    buttons.push({
-                        name: 'bind',
-                        text: '绑定游戏',
-                        title: '绑定游戏',
-                        classname: 'btn btn-xs btn-primary btn-dialog',
-                        icon: 'fa fa-link',
-                        url: 'game/category/data/index?category2_id=' + row.id
-                    });
-                    
-                    // 调用默认的操作按钮渲染
-                    return Table.api.formatter.operate.call(table, value, row, index, buttons);
-                }
             }
         }
     };

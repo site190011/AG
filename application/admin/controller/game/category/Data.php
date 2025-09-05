@@ -37,14 +37,22 @@ class Data extends Backend
     public function index()
     {
         $bindid = $this->request->request('bindid');
-        $this->model_d = new \app\admin\model\game\category\Data;
         $this->model = new \app\admin\model\Games;
 
+        $this->model->field([
+            'fa_games.id as game_id',
+            'fa_games.game_code',
+            'fa_games.game_name',
+            'fa_games.ingress',
+            'fa_games.plat_type',
+            'fa_games.game_type',
+            'fa_games.is_enable as games_is_enable',
+            'fa_game_category_data.id as data_id',
+        ]);
         
 
-        // $this->model->field('games.id as game_id, games.game_code, games.game_name, games.ingress, games.plat_type, games.is_enable as games_is_enable, game_category_data.id as data_id');
-        // $this->model->join('game_category_data', 'game_category_data.game_id = games.id');
-        // $this->model->where('games_is_enable', 1);
+        $this->model->join('fa_game_category_data', 'fa_game_category_data.game_id = fa_games.id', 'LEFT');
+        $this->model->where('fa_games.is_enable', 1);
         return parent::index();
     }
 }

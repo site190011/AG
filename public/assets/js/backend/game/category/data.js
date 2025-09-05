@@ -6,11 +6,11 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             Table.api.init({
                 extend: {
                     index_url: 'game/category/data/index' + location.search,
-                    add_url: 'game/category/data/add',
-                    edit_url: 'game/category/data/edit',
-                    del_url: 'game/category/data/del',
+                    // add_url: 'game/category/data/add',
+                    // edit_url: 'game/category/data/edit',
+                    // del_url: 'game/category/data/del',
                     multi_url: 'game/category/data/multi',
-                    import_url: 'game/category/data/import',
+                    // import_url: 'game/category/data/import',
                     table: 'game_category_data',
                 }
             });
@@ -20,12 +20,12 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             // 初始化表格
             table.bootstrapTable({
                 url: $.fn.bootstrapTable.defaults.extend.index_url,
-                pk: 'id',
-                sortName: 'game_id',
+                pk: 'game_id',
+                sortName: 'fa_games.id',
                 columns: [
                     [
-                        {checkbox: true},
-                        {field: 'id', title: __('Id')},
+                        // {checkbox: true},
+                        {field: 'game_id', title: __('Id')},
                         {field: 'plat_type', 
                             title: '平台', 
                             operate: '=', 
@@ -62,7 +62,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             return volue + "|" + ingressList[volue];
                         }},
                         {field: 'game_name', title: '游戏名', operate: 'LIKE', table: table, class: 'autocontent', formatter: Table.api.formatter.content},
-                        {field: 'bind', title: '绑定', readonly: true, formatter: Table.api.formatter.toggle, events: Table.api.events.toggle},
+                        {field: 'bind', title: '绑定', formatter: Table.api.formatter.toggle},
                     ]
                 ]
             });

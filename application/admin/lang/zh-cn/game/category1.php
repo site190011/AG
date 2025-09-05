@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'Key'        => 'CID',
+    'Key'        => 'Key',
     'Name'       => '分类名称',
     'Image_url'  => '图片',
     'Status'     => '状态',

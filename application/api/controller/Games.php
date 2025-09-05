@@ -10,7 +10,7 @@ use think\Db;
  */
 class Games extends Api
 {
-    protected $noNeedLogin = ['getGameList', 'getPlatTypeList', 'getGameListByCustomType'];
+    protected $noNeedLogin = ['getGameList', 'getPlatTypeList', 'getCategoryList'];
     protected $noNeedRight = ['*'];
 
     public function getGameList()
@@ -34,29 +34,23 @@ class Games extends Api
         $this->success('success', $list);
     }
 
+    public function getCategoryList()
+    {
+        $list1 = Db::name('game_category1')->order('sort_order', 'desc')->select();
+        $list2 = Db::name('game_category2')->order('sort_order', 'desc')->select();
+
+        $list1 = array_map(function ($item) use ($list2) {
+            $item['children'] = array_filter($list2, function ($item2) use ($item) {
+                return $item2['parent_id'] == $item['id'];
+            });
+            return $item;
+        }, $list1);
+
+        $this->success('success', $list1);
+    }
+
     public function getGameListByCustomType()
     {
-        $gameModel = new \app\admin\model\Games();
-        $game_list = $gameModel->where('is_enable', 1)->whereNotNull('custom_type1')->select();
-        $type_set = $gameModel->getCustomType1List();
-        $game_type_list = [];
-
-        foreach ($game_list as $game) {
-            $type = $game['custom_type1'] ?? '-';
-            $typeName = $type_set[$game['custom_type1']] ?? '未分类';
-
-            if (!isset($game_type_list[$type])) {
-                $game_type_list[$type] = [
-                    'type' => $type,
-                    'type_name' => $typeName,
-                    'games' => []
-                ];
-            }
-
-            $game_type_list[$type]['games'][] = $game;
-        }
-
-        $this->success('success', $game_type_list);
     }
 
     /**
