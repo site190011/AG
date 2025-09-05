@@ -7,7 +7,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                 extend: {
                     index_url: 'game/category/data/index' + location.search,
                     // add_url: 'game/category/data/add',
-                    // edit_url: 'game/category/data/edit',
+                    edit_url: 'game/category/data/edit',
                     // del_url: 'game/category/data/del',
                     multi_url: 'game/category/data/multi',
                     // import_url: 'game/category/data/import',
@@ -62,7 +62,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             return volue + "|" + ingressList[volue];
                         }},
                         {field: 'game_name', title: '游戏名', operate: 'LIKE', table: table, class: 'autocontent', formatter: Table.api.formatter.content},
-                        {field: 'bind', title: '绑定', formatter: Table.api.formatter.toggle},
+                        {field: 'bind', title: '绑定', formatter: Table.api.formatter.toggle, events: Controller.api.events.toggle},
                     ]
                 ]
             });
@@ -79,6 +79,39 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
         api: {
             bindevent: function () {
                 Form.api.bindevent($("form[role=form]"));
+            },
+            events: {
+                toggle: {
+                    'click .btn-change': function (e, value, row, index) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const table = $(this).closest('table');
+                        const options = table.bootstrapTable('getOptions');
+                        const category2_id = table.data('category2-id')
+
+                        $.ajax({
+                            url: options.extend.edit_url,
+                            type: 'POST',
+                            data: {
+                                category2_id: category2_id,
+                                game_id: row.game_id,
+                                bind: value == 1 ? 'no' : 'yes'
+                            },
+                            success: function (res) {
+                                if (res.code == 1) {
+                                    Toastr.success(res.msg);
+                                    table.refresh();
+                                } else {
+                                    Toastr.error(res.msg);
+                                }
+                            },
+                            error: function (err) {
+                                Toastr.error(err.message);
+                            }
+                        })
+
+                    }
+                }
             }
         }
     };

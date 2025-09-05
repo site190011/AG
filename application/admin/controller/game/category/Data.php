@@ -3,6 +3,7 @@
 namespace app\admin\controller\game\category;
 
 use app\common\controller\Backend;
+use think\Db;
 
 /**
  * 
@@ -47,12 +48,32 @@ class Data extends Backend
             'fa_games.plat_type',
             'fa_games.game_type',
             'fa_games.is_enable as games_is_enable',
-            'fa_game_category_data.id as data_id',
+            'if(fa_game_category_data.category2_id, 1, 0) as bind',
         ]);
         
 
         $this->model->join('fa_game_category_data', 'fa_game_category_data.game_id = fa_games.id', 'LEFT');
         $this->model->where('fa_games.is_enable', 1);
         return parent::index();
+    }
+
+    public function edit($ids = null)
+    {
+        $category2_id = $this->request->request('category2_id');
+        $game_id = $this->request->request('game_id');
+        $bind = $this->request->request('bind');
+        
+        if ($bind == 'yes') {
+            if (Db::name('game_category_data')->where('game_id', $game_id)->where('category2_id', $category2_id)->count() == 0) {
+                Db::name('game_category_data')->insert([
+                    'category2_id' => $category2_id,
+                    'game_id' => $game_id
+                ]);
+            }
+            $this->success('绑定成功');
+        } else {
+            Db::name('game_category_data')->where('game_id', $game_id)->where('category2_id', $category2_id)->delete();
+            $this->success('解绑成功');
+        }
     }
 }
