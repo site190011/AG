@@ -100,13 +100,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                             success: function (res) {
                                 if (res.code == 1) {
                                     Toastr.success(res.msg);
-                                    table.refresh();
                                 } else {
                                     Toastr.error(res.msg);
                                 }
+                                // 刷新表格数据
+                                table.bootstrapTable('refresh');
                             },
                             error: function (err) {
                                 Toastr.error(err.message);
+                                // 即使出错也刷新表格，以确保数据一致性
+                                table.bootstrapTable('refresh');
                             }
                         })
 
