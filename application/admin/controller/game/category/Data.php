@@ -51,8 +51,7 @@ class Data extends Backend
             'if(fa_game_category_data.category2_id, 1, 0) as bind',
         ]);
         
-
-        $this->model->join('fa_game_category_data', 'fa_game_category_data.game_id = fa_games.id', 'LEFT');
+        $this->model->join('fa_game_category_data', 'fa_game_category_data.game_id = fa_games.id AND fa_game_category_data.category2_id=' . intval($bindid), 'LEFT');
         $this->model->where('fa_games.is_enable', 1);
         return parent::index();
     }

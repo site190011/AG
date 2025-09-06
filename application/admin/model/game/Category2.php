@@ -25,7 +25,7 @@ class Category2 extends Model
 
     // 追加属性
     protected $append = [
-        'game_count'
+        'gameCount'
     ];
 
     public function getGameCountAttr($value, $data)

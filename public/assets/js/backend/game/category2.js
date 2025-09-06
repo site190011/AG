@@ -27,7 +27,7 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {checkbox: true},
                         {field: 'id', title: __('Id')},
                         {field: 'parent_id', title: __('Parent_id')},
-                        {field: 'game_count', title: '游戏数量'},
+                        {field: 'gameCount', title: '游戏数量'},
                         {field: 'key', title: __('Key'), operate: 'LIKE'},
                         {field: 'name', title: __('Name'), operate: 'LIKE', table: table, class: 'autocontent', formatter: Table.api.formatter.content},
                         {field: 'status', title: __('Status'), formatter: Table.api.formatter.toggle},
