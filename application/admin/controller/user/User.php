@@ -207,4 +207,15 @@ class User extends Backend
         return $this->view->fetch();
     }
 
+    public function report() {
+        $uid = $this->request->get('uid');
+        $user = Db::name('user')->where('id',$uid)->find();
+        if (!$user) {
+            $this->error('用户不存在');
+        }
+
+        $this->view->assign('user',$user);
+        return $this->view->fetch();
+    }
+
 }

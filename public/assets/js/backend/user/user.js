@@ -80,7 +80,16 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         ]},
 
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate, buttons:  [
-                                {
+                            {
+                                name: 'report',
+                                text: '报表',
+                                title: '报表',
+                                classname: 'btn btn-xs btn-success ',
+                                url: function(row) {
+                                    return 'user/report?uid=' + row.id;
+                                }
+                            },    
+                            {
                                     name: 'edit_money',
                                     text: __('加减款'),
                                     title: __('加减款'),

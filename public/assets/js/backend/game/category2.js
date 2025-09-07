@@ -35,21 +35,21 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                         {field: 'created_at', title: __('Created_at'), operate:'RANGE', addclass:'datetimerange', autocomplete:false},
                         {field: 'updated_at', title: __('Updated_at'), operate:'RANGE', addclass:'datetimerange', autocomplete:false},
                         {field: 'operate', title: __('Operate'), table: table, events: Table.api.events.operate, formatter: Table.api.formatter.operate, buttons: [
-                            {
-                                name: 'edit_game_list',
-                                text: __('绑定游戏'),
-                                title: __('绑定游戏'),
-                                classname: 'btn btn-xs btn-success btn-dialog',
-                                // icon: 'fa fa-list',
-                                url: 'game/category/data?bindid={id}',
-                                // refresh: true,
-                                callback: function (data) {
-                                    // Layer.alert("接收到回传数据：" + JSON.stringify(data), {title: "回传数据"});
-                                },
-                                visible: function (row) {
-                                    return true;
-                                }
-                            }
+                            // {
+                            //     name: 'edit_game_list',
+                            //     text: __('绑定游戏'),
+                            //     title: __('绑定游戏'),
+                            //     classname: 'btn btn-xs btn-success btn-dialog',
+                            //     // icon: 'fa fa-list',
+                            //     url: 'game/category/data?bindid={id}',
+                            //     // refresh: true,
+                            //     callback: function (data) {
+                            //         // Layer.alert("接收到回传数据：" + JSON.stringify(data), {title: "回传数据"});
+                            //     },
+                            //     visible: function (row) {
+                            //         return true;
+                            //     }
+                            // }
                         ]}
                     ]
                 ]
