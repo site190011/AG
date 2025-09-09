@@ -1,4 +1,5 @@
-define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefined, Backend, Table, Form) {
+// define(['jquery', 'bootstrap', 'backend', 'table', 'form', 'echarts', 'echarts-theme', 'template'], function ($, undefined, Backend, Table, Form) {
+define(['jquery', 'bootstrap', 'backend', 'addtabs', 'table', 'echarts', 'echarts-theme', 'template', 'form'], function ($, undefined, Backend, Datatable, Table, Echarts, undefined, Template, Form) {
 
     var Controller = {
         index: function () {
@@ -84,9 +85,9 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
                                 name: 'report',
                                 text: '报表',
                                 title: '报表',
-                                classname: 'btn btn-xs btn-success ',
+                                classname: 'btn btn-xs btn-success btn-addtabs',
                                 url: function(row) {
-                                    return 'user/report?uid=' + row.id;
+                                    return 'user/user/report?uid=' + row.id;
                                 }
                             },    
                             {
@@ -140,7 +141,72 @@ define(['jquery', 'bootstrap', 'backend', 'table', 'form'], function ($, undefin
             bindevent: function () {
                 Form.api.bindevent($("form[role=form]"));
             }
+        },
+        report: function () {
+            if (rechargeData) {
+                let i = setInterval(() => {
+                    console.log(i);
+                    if (Echarts) {
+                        clearInterval(i);
+                        this.rechargeChart();
+                    }
+                }, 100);
+                return;
+            }
+        },
+        rechargeChart: function () {
+            console.log(Echarts);
+            // 基于准备好的dom，初始化echarts实例
+            // var myChart = Echarts.init(document.getElementById('recharge-chart'));
+            var myChart = Echarts.init(document.getElementById('recharge-chart'), 'walden');
+
+            // 生成日期范围
+            function getDateRange() {
+                var dates = [];
+                var date = new Date();
+                for (var i = 90; i >= 0; i--) {
+                    var d = new Date(date);
+                    d.setDate(d.getDate() - i);
+                    dates.push(d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'));
+                }
+                return dates;
+            }
+
+            // 处理充值趋势数据
+            var dates = getDateRange();
+            var amounts = [];
+            dates.forEach(function(date) {
+                amounts.push(rechargeData[date] || 0);
+            });
+
+            // 指定图表的配置项和数据
+            var option = {
+                tooltip: {
+                    trigger: 'axis'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: dates
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    data: amounts,
+                    type: 'line',
+                    smooth: true,
+                    areaStyle: {}
+                }]
+            };
+
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
+            
+            $(window).on("resize", function () {
+                myChart.resize();
+            });
         }
     };
+
     return Controller;
 });

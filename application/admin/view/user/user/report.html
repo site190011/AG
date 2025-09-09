@@ -1,23 +1,122 @@
-<div class="row">
-    <div class="col-lg-8">
-        <div id="echart" class="btn-refresh" style="height:300px;width:100%;"></div>
+<style>
+    .stat-box {
+        background: #fff;
+        border-radius: 4px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .stat-title {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 10px;
+    }
+    .stat-value {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+    }
+    .game-stats-table th, .game-stats-table td {
+        text-align: center;
+    }
+</style>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        用户报表 - {$user.username}
     </div>
-    <div class="col-lg-4">
-        <div class="card sameheight-item stats">
-            <div class="card-block">
-                <div class="row row-sm stats-container">
-                    <div class="col-xs-6 stat-col">
-                        <div class="stat-icon"><i class="fa fa-rocket"></i></div>
-                        <div class="stat">
-                            <div class="value"> 项目名 </div>
-                            <div class="name"> 数量 </div>
-                        </div>
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-success" style="width: 20%"></div>
-                        </div>
-                    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="stat-box">
+                    <div class="stat-title">当前资金</div>
+                    <div class="stat-value">¥{:sprintf('%.2f', $currentMoney)}</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-box">
+                    <div class="stat-title">总充值</div>
+                    <div class="stat-value">¥{:sprintf('%.2f', $totalRecharge)}</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-box">
+                    <div class="stat-title">反水总额</div>
+                    <div class="stat-value">¥{:sprintf('%.2f', $totalRebate)}</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-box">
+                    <div class="stat-title">用户ID</div>
+                    <div class="stat-value">{$user.id}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="stat-box">
+                    <div class="stat-title">近90天充值趋势</div>
+                    <div id="recharge-chart" style="height: 300px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="stat-box">
+                    <div class="stat-title">各游戏输赢情况</div>
+                    <table class="table table-striped game-stats-table">
+                        <thead>
+                            <tr>
+                                <th>游戏类型</th>
+                                <th>有效投注</th>
+                                <th>输赢金额</th>
+                                <th>盈亏率</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {foreach $gameStats as $stat}
+                            <tr>
+                                <td>
+                                    {switch $stat.game_type}
+                                        {case 1}真人{/case}
+                                        {case 2}电子{/case}
+                                        {case 3}彩票{/case}
+                                        {case 4}体育{/case}
+                                        {case 5}电竞{/case}
+                                        {case 6}捕鱼{/case}
+                                        {case 7}棋牌{/case}
+                                        {default}未知{/default}
+                                    {/switch}
+                                </td>
+                                <td>¥{:sprintf('%.2f', $stat.total_bet)}</td>
+                                <td>¥{:sprintf('%.2f', $stat.total_winlose)}</td>
+                                <td>
+                                    {if $stat.total_bet > 0}
+                                        {:sprintf('%.2f', ($stat.total_winlose / $stat.total_bet) * 100)}%
+                                    {else}
+                                        0.00%
+                                    {/if}
+                                </td>
+                            </tr>
+                            {/foreach}
+                            {if count($gameStats) == 0}
+                            <tr>
+                                <td colspan="4" class="text-center">暂无游戏记录</td>
+                            </tr>
+                            {/if}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    var rechargeData = {};
+    {foreach $rechargeTrend as $trend}
+        rechargeData['{$trend.date}'] = parseFloat('{$trend.amount}');
+    {/foreach}
+</script>

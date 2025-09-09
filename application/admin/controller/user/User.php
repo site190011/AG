@@ -198,7 +198,7 @@ class User extends Backend
              }
              try {
                  $row->changeMoney('',$params['num'],$params['type'],$params['memo']);
-             } catch (Exception $e) {
+             } catch (\Exception $e) {
                  $this->error($e->getMessage());
              }
              $this->success('成功');
@@ -214,7 +214,45 @@ class User extends Backend
             $this->error('用户不存在');
         }
 
-        $this->view->assign('user',$user);
+        // 获取用户当前资金
+        $currentMoney = $user['money'];
+
+        // 获取用户总充值金额
+        $totalRecharge = Db::name('user_recharge')
+            ->where('user_id', $uid)
+            ->where('status', 1)
+            ->sum('amount');
+
+        // 获取用户游戏记录统计（按游戏类型分组）
+        $gameStats = Db::name('game_bet')
+            ->field('game_type, SUM(valid_amount) as total_bet, SUM(settled_amount) as total_winlose')
+            ->where('user_id', $uid)
+            ->where('status', 1)
+            ->group('game_type')
+            ->select();
+
+        // 获取反水情况
+        $totalRebate = Db::name('user_money_log')
+            ->where('user_id', $uid)
+            ->where('type', 'game_rebate')
+            ->sum('money');
+
+        // 获取最近1年充值记录用于趋势图
+        $rechargeTrend = Db::name('user_recharge')
+            ->field("FROM_UNIXTIME(success_time, '%Y-%m-%d') as date, SUM(amount) as amount")
+            ->where('user_id', $uid)
+            ->where('status', 1)
+            ->where('success_time', '>', strtotime('-90 days'))
+            ->group('date')
+            ->order('date')
+            ->select();
+
+        $this->view->assign('user', $user);
+        $this->view->assign('currentMoney', $currentMoney);
+        $this->view->assign('totalRecharge', $totalRecharge);
+        $this->view->assign('gameStats', $gameStats);
+        $this->view->assign('totalRebate', $totalRebate);
+        $this->view->assign('rechargeTrend', $rechargeTrend);
         return $this->view->fetch();
     }
 
